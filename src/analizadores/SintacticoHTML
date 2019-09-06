@@ -1,0 +1,80 @@
+
+package analizadores;
+import java_cup.runtime.*;
+import HTML.HTML;
+import proyecto1.Reporte;
+
+
+
+parser code 
+{:  
+
+    public void syntax_error(Symbol s){ 
+            System.err.println("[HTML] No se esperaba este componente: " + s.value + " linea: "+s.left+" columna: "+s.right);
+            Reporte.agregarReporte(new Reporte("Sintactico", "[HTML] No se esperaba este componente: " + s.value, s.left,s.right));
+           } 
+   
+    public void unrecovered_syntax_error(Symbol s) throws java.lang.Exception{ 
+       
+      System.err.println(s.value + " error falta");
+     
+    }
+
+
+  
+:}  
+terminal String txtetiqueta, cadena, mayor, diagonal,igual,htmlI,htmlF,head,body,title,noufe,id,div
+;
+
+non terminal String INICIO, L_HTML, HTML, HEAD, BODY, L_BODY,B
+;
+
+
+start with INICIO;
+
+INICIO ::=  htmlI mayor  L_HTML:a  txtetiqueta diagonal htmlF
+                    {:
+                      System.out.println("<html>\n"+a+"</html>");
+                    :}
+;
+
+
+L_HTML ::=      L_HTML:html HTML:b{:RESULT = html + b;:}
+                |HTML:b{:RESULT = b;:}
+;
+
+HTML::=         HEAD:b{:RESULT = b;:}
+                |BODY:b{:RESULT = b;:}
+;
+
+
+HEAD ::=        txtetiqueta head mayor txtetiqueta title mayor txtetiqueta:titulo  diagonal title mayor txtetiqueta diagonal head mayor
+                    {:
+                        RESULT = "<head>\n<title>"+titulo+"</title>\n</head>";
+                    :}
+;
+
+BODY ::=        txtetiqueta body  mayor  L_BODY:texto  txtetiqueta diagonal body mayor
+                    {:
+                        RESULT = "<body> \n "+texto+"</body> \n";
+                    :}
+;
+
+
+L_BODY::=       L_BODY:body  B:b{:RESULT = body + b; :}
+                | B:b{:RESULT = b;:}
+;
+
+
+B::=            txtetiqueta noufe mayor txtetiqueta:texto  diagonal noufe mayor 
+                    {:
+                        HTML.agregarId(new HTML(true,texto.trim()));
+                        RESULT = "<noufe>"+texto+"</noufe> \n";
+                    :}
+                |txtetiqueta div id igual cadena:id mayor txtetiqueta  diagonal div mayor
+                    {:
+                         HTML.agregarId(new HTML(false,id.replace("\"","").toLowerCase().trim()));
+                        RESULT = "<div id="+id+"></div> \n";
+                    :}
+
+;

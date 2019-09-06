@@ -1,0 +1,12 @@
+
+component Spinner() {
+
+Var condición = true;
+Mientras (condición) {
+Imprimir("ciclo...") ;
+}
+
+return (
+<spinner id= primary x = 562 y = 35 height = 26 width = 71 color = "yellow" className = "spinnerPro" max = 30 min = -50> 666 </ spinner >
+);
+}

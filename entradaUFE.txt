@@ -1,0 +1,142 @@
+import "./estilos1.css";
+import Boton1 from "./elementosFomr1.ufe";
+import Sppiner1 from "./elementosFomr1.ufe";
+import tituloF from "./elementosFomr1.ufe";
+/* Importación desde otro archivo */
+import Boton2 from "./componentes/utilidades.ufe";
+import BotonAlerta from "./componentes/utilidades.ufe";
+
+Var condicion = true;
+var lista [10];
+lista[0] = 10;
+lista[2] = lista[10] + " = diez";
+var lista2 = {1,1.1, 20*20/20, lista[0]*2 , "hola mundo"};
+imprimir(lista[0] + lista2[4]);
+var negativo = -15;
+var decimalnegativo=-5.2;
+var imprimir = "GLOBAL";
+Mientras (lista[0] <15) {
+var imprimir = "LOCAL";
+Imprimir("Mientras global..." + imprimir) ;
+lista[0] = lista[0] + 1;
+}
+
+
+
+component App() {
+
+Repetir ((5 - var1) * var2) {
+Imprimir ("Iteracion #" + contador) ;
+Contador = Contador + 1 ;
+}
+
+si(a<b){
+Imprimir("a...") ;
+}sino si(a==b){
+Imprimir("b...") ;
+}sino{
+Imprimir("c...") ;
+}
+
+
+return (
+<Panel id= primary x = 0 y = 0 height = 150 width = 200 color = "red" border = 2>
+
+<Panel id = second x = 5 y = 5 height = 60 width = 190 color = "blue" border = 1> </Panel>
+
+<Panel id = tercero x = 5 y = 80 height =60 width = 190 className = "panel ter"></boton2></Panel>
+</Panel>
+);
+}
+
+component panelConText() {
+return (
+<Panel id= primary x = 0 y = 0 height = 150 width = 200 color = "red" border = 2>
+<text x = 10 y = 10 height = 10 width = 20 className = "titulo1">
+{mensaje_bienvenida}
+</text>
+</Panel>
+);
+}
+
+component PanelConTexField() {
+return (
+<Panel id= primary x = 0 y = 0 height = 150 width = 200 color = "red" border = 2>
+<text x = 10 y = 10 height = 10 width = 20 className = "titulo1">
+{mensaje_bienvenida}
+</text>
+<textfield y = 40 x = 10 className = "field">{mensaje_bienvenida}
+</textfield>
+</Panel>
+);
+}
+
+
+component PanelConBoton() {
+return (
+<Panel id= primary x = 0 y = 0 height = 150 width = 200 color = "red" border = 2>
+<button x = 10 y = 10 height = 30 width = 30 onclick = {variable10}>{nombreBoton}
+</button>
+</Panel>
+);
+}
+
+
+
+component ListaElementos() {
+Imprimir ("Debo apresurarme" + " sino perderé ") ;
+var lista[10];
+lista[0] = 10;
+lista[2] = lista[10] + " = diez";
+var lista2 = {1,1.1, 20*20/20, lista[0]*2 , "hola mundo"};
+imprimir(lista[0] + lista2[4]);
+
+return (
+<Panel id= primary x = 0 y = 0 height = 150 width = 200 color = "red" border = 2>
+<list x = 100 y = 100 className = "lista">
+<elements>
+<item> {item1}</item>
+<item> "Física aplicada"</item>
+<item> "Organización computacional"</item>
+</elements>
+<default> 3 </default>
+</list>
+</Panel>
+);
+}
+
+
+
+component PanelConEspiner() {
+
+Var condición = true;
+Mientras (condición) {
+Imprimir("ciclo...") ;
+}
+
+return (
+<Panel id= primary x = 0 y = 0 height = 150 width = 200 color = "red" border = 2>
+<spinner x = 100 y = 100 className = "spinnerPro" max = 1000 min = -100> 666
+</ spinner >
+</Panel>
+);
+}
+
+
+component App() {
+
+Repetir ((5 - var1) * var2) {
+Imprimir ("Iteracion #" + contador) ;
+Contador = Contador + 1 ;
+}
+
+return (
+<Panel id= primary x = 0 y = 0 height = 500 width = 500 color = "red" border = 2>
+<image x = 100 y = 100 height = 100 width = 200 src = "profile.jpg">
+</Panel>
+);
+}
+
+
+
+

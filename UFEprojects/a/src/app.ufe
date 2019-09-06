@@ -1,0 +1,68 @@
+import "./App.css";
+import panel1 from "./panel1.ufe";
+
+/*Area de variables*/
+var indexGrade = 0;
+var indexSemester = 1;
+var listaGrados = 
+{ /*         0         ,          1   ,       2    ,    3     ,    4    ,       5            */
+  "Ciencias y sistemas", "Electrónica", "Electrica","Mecánica","Química","Mecanica Industrial"
+};
+
+var listaEscuelas[5];
+listaEscuelas[5] = "Escuela de mecanica industrial";
+listaEscuelas[4] = "Escuela de ingeniería química";
+listaEscuelas[3] = "Escuela de mecanica ";
+listaEscuelas[2] = "Escuela de mecanica electrica";
+listaEscuelas[1] = "Escuela de telecomunicaciones";
+listaEscuelas[0] = "Escuela de ciencias y sistemas";
+
+
+
+
+component Panel()
+{
+return (
+</Spinner1>
+</panel1>
+);
+}
+
+
+
+component Panel()
+{
+     var anio = 2019;
+     return
+     (          
+          <panel id= "alison" x = 500 y = 100 height = 500 width = 380 className="panel">                  
+               <text x =10  y = 30 height = 28 width = 198 className ="titulo">
+                    "Descripcion"
+               </text>                    
+               <text x = 40 y = 130 height = 30 width = 410 className ="titulo notas">
+                    {listaEscuelas[indexGrade] + "  " + anio}
+               </text>                   
+               <text x = 40 y = 80 height = 30 width = 410 className ="titulo notas">
+                    {listaGrados[indexGrade] + "  " + anio}
+               </text>                                        
+          </panel>               
+     );
+}
+
+
+component Spinner1() {
+return (
+<spinner id= "id" x = 562 y = 35 height = 26 width = 71 color = "yellow" max = 30 min = -50> 666 </ spinner >
+);
+}
+
+component Imagen() {
+return (
+
+<image x = 64 y = 372 height = 447 width = 831 src = "arbol3.png">
+);
+}
+
+
+
+render(</panel>, root);

@@ -1,0 +1,736 @@
+
+package analizadores;
+import java_cup.runtime.*;
+import proyecto1.Reporte;
+
+parser code 
+{:   
+ public Nodo raiz;
+    public void syntax_error(Symbol s){ 
+            System.err.println("[UFE] No se esperaba este componente: " + s.value + " linea: "+s.left+" columna: "+s.right);
+            Reporte.agregarReporte(new Reporte("Sintactico","[UFE] No se esperaba este componente: " + s.value, s.left,s.right));
+    } 
+   
+    public void unrecovered_syntax_error(Symbol s) throws java.lang.Exception{   
+      System.err.println(s.value + " error fatal");
+    }
+
+      private String ConvertirColor(String color) {
+        switch (color.toLowerCase()) {
+            case "red": {
+                return "#ff3333";
+            }
+            case "pink": {
+                return "#ff0080";
+            }
+            case "orange": {
+                return "#ffb266";
+            }
+            case "yellow": {
+                return "#ffff66";
+            }
+            case "purple": {
+                return "#cc00cc";
+            }
+            case "magenta": {
+                return "#f50087";
+            }
+            case "green": {
+                return "#9ff781";
+            }
+            case "blue": {
+                return "#3333ff";
+            }
+            case "brown": {
+                return "#994c00";
+            }
+            case "white": {
+                return "#ffffff";
+            }
+            case "gray": {
+                return "#c0c0c0";
+            }
+            case "black": {
+                return "#202020";
+            } 
+        }
+        return "#CCCCFF";
+    }
+:}  
+
+terminal String  p_char, p_cadena, numerodecimal, numeroentero,id,p_false,p_true,pow,division,multi,menos,mas,inicioReturn,
+imprimir,mientras,repetir,sino,si,igual,atributo,p_default,item,elements,xor,or,and,diferente,igualdad,finReturn,color,
+mayorigual,mayor,menorigual,menor,image,spinner,list,textfield,text,panel,from,p_import,var,component,render,pyc,numeronegativo,
+coma,corcheteDer,corcheteIzq,parentesisDer,parentesisIzq,llaveDer,llaveIzq,negacion,boton,etiquetaA,etiquetaC,diagonal
+;
+
+
+non terminal Nodo INICIO,L_INSTRUCCIONES,INSTRUCCIONES,COMPONENT,IMPORT,RENDER,IMPORT_COMPONENT, L_CONTENIDO,
+CONTENIDO,RETURN,L_COMPONENTES,COMPONENTES,PANEL,BOTON,TEXTFIELD,TEXT,IMAGE,LIST,ELEMENTS,DEFAULT,L_ITEMS,ITEM,
+SPINNER,L_ATRIBUTOS,ATRIBUTOS,ASIGNACION,INSERT_IMPORT,IF,SI,L_SINO_SI,SINO_SI,SINO,REPETIR,MIENTRAS,
+IMPRIMIR,DECLARACION_ARRAY,ASIGNACION_ARRAY,DECLARACION_VAR,ASIGNACION_VAR,L_EXPRESIONES,ACCESO,
+L_IMPRIMIR,EXPRESION,VALOR_ARRAY,L_ID,OPERACION,TIPO,BLOQUE,ASIGNAR
+;
+
+precedence left or;
+precedence left and, xor;
+precedence left negacion;
+precedence left igualdad, diferente,menor, mayor, menorigual,mayorigual;
+precedence left mas,menos;
+precedence left multi, division;
+precedence left pow;
+
+
+start with INICIO;
+
+
+INICIO             ::=           L_INSTRUCCIONES:a {: parser.raiz = a; :}
+;
+
+L_INSTRUCCIONES    ::=           L_INSTRUCCIONES:hijo1 INSTRUCCIONES:hijo3
+                                {:
+                                    hijo1.agregarHijo(hijo3);
+                                    RESULT = hijo1;
+                                :}
+                                 |INSTRUCCIONES:hijo1
+                                {:
+                                    Nodo padre = new Nodo("L_INSTRUCCIONES","",hijo1left,hijo1right);
+                                    padre.agregarHijo( hijo1);
+                                    RESULT = padre;
+                                :}
+;
+
+
+INSTRUCCIONES      ::=          COMPONENT:a {: RESULT =  a;  :}
+                                |IMPORT:a {: RESULT =  a;  :}
+                                |IMPORT_COMPONENT:a {: RESULT =  a;  :}
+                                |RENDER:a {: RESULT =  a;  :}
+                                |IF:a {: RESULT =  a;  :}
+                                |REPETIR:a {: RESULT =  a;  :}    
+                                |IMPRIMIR:a {: RESULT =  a;  :}
+                                |MIENTRAS:a {: RESULT =  a;  :}
+                                |DECLARACION_VAR:a {: RESULT =  a;  :}
+                                |DECLARACION_ARRAY:a {: RESULT =  a;  :}
+                                |ASIGNACION:a {: RESULT =  a;  :}
+                                |RETURN:a {: RESULT =  a;  :}
+;               
+
+
+COMPONENT          ::=          component id:a parentesisIzq parentesisDer BLOQUE:hijo2 
+                                {:
+                                    Nodo padre = new Nodo("COMPONENTE","",aleft,aright);
+                                    padre.agregarHijo(new Nodo("ID", a, aleft, aright));
+                                    padre.agregarHijo( hijo2);
+                                    RESULT = padre;
+                                :}
+;
+
+IMPORT             ::=          p_import EXPRESION:hijo1 pyc
+                                {:
+                                    Nodo padre = new Nodo("IMPORT_CSS","",hijo1.linea,hijo1.columna);
+                                    padre.agregarHijo( hijo1);
+                                    RESULT = padre;
+                                :}
+;
+
+RENDER             ::=          render parentesisIzq menor division id:a mayor coma id:b parentesisDer pyc
+                                {:
+                                    Nodo padre = new Nodo("RENDER","", aleft, aright);
+                                    padre.agregarHijo(new Nodo("ID", a, aleft, aright));
+                                    padre.agregarHijo(new Nodo("ID", b, bleft, bright));
+                                    RESULT = padre;
+                                :}
+;
+
+IMPORT_COMPONENT   ::=          p_import id:a from EXPRESION:hijo2 pyc
+                                {:
+                                    Nodo padre = new Nodo("IMPORT_COMPONENT","",aleft,aright);
+                                    padre.agregarHijo(new Nodo("ID", a, aleft, aright));
+                                    padre.agregarHijo(hijo2);
+                                    RESULT = padre;
+                                :}
+;
+
+
+/*-----------------------------------   COMPONENTES ----------------------------------------------*/
+
+BLOQUE             ::=         llaveIzq L_INSTRUCCIONES:hijo1 llaveDer
+                                {:
+                                    RESULT = hijo1;
+                                :}
+;
+
+
+RETURN             ::=          inicioReturn parentesisIzq L_COMPONENTES:hijo1 finReturn
+                                {:
+                                    Nodo padre = new Nodo("RETURN","",hijo1left,hijo1right);
+                                    padre.agregarHijo( hijo1);
+                                    RESULT = padre;
+                                :}
+;
+
+L_COMPONENTES      ::=          L_COMPONENTES:hijo1  COMPONENTES:hijo3
+                                {:
+                                    hijo1.agregarHijo(hijo3);
+                                    RESULT = hijo1;
+                                :}
+                                |COMPONENTES:hijo1
+                                {:
+                                    Nodo padre = new Nodo("L_COMPONENTES","",hijo1left,hijo1right);
+                                    padre.agregarHijo( hijo1);
+                                    RESULT = padre;
+                                :}
+;
+
+COMPONENTES        ::=          PANEL:a {: RESULT =  a;  :}
+                                |BOTON:a {: RESULT =  a;  :}
+                                |TEXTFIELD:a {: RESULT =  a;  :}
+                                |TEXT:a {: RESULT =  a;  :}
+                                |IMAGE:a {: RESULT =  a;  :}
+                                |LIST:a {: RESULT =  a;  :}
+                                |SPINNER:a {: RESULT =  a;  :}
+                                |INSERT_IMPORT:a {: RESULT =  a;  :}
+;
+
+PANEL             ::=             etiquetaA panel L_ATRIBUTOS:hijo1 etiquetaC etiquetaA diagonal panel etiquetaC
+                                {:
+                                    Nodo padre = new Nodo("PANEL","",hijo1left,hijo1right);
+                                    padre.agregarHijo( hijo1);
+                                    RESULT = padre;
+                                :}
+                                |etiquetaA panel L_ATRIBUTOS:hijo1 etiquetaC L_COMPONENTES:hijo2  etiquetaA diagonal panel etiquetaC
+                                {:
+                                    Nodo padre = new Nodo("PANEL","",hijo1left,hijo1right);
+                                    padre.agregarHijo( hijo1);
+                                    padre.agregarHijo( hijo2);
+                                    RESULT = padre;
+                                :}
+;
+
+
+BOTON             ::=           etiquetaA boton L_ATRIBUTOS:hijo1 etiquetaC TIPO:hijo2 etiquetaA diagonal boton etiquetaC
+                                {:
+                                    Nodo padre = new Nodo("BOTON","",hijo1left,hijo1right);
+                                    padre.agregarHijo( hijo1);
+                                    padre.agregarHijo( hijo2);
+                                    RESULT = padre;
+                                :}
+                                |etiquetaA boton L_ATRIBUTOS:hijo1 etiquetaC etiquetaA diagonal boton etiquetaC
+                                {:
+                                    Nodo padre = new Nodo("BOTON","",hijo1left,hijo1right);
+                                    padre.agregarHijo( hijo1);
+                                    RESULT = padre;
+                                :}
+;
+TEXTFIELD         ::=           etiquetaA textfield L_ATRIBUTOS:hijo1 etiquetaC TIPO:hijo2 etiquetaA diagonal textfield etiquetaC
+                                {:
+                                    Nodo padre = new Nodo("TEXTFIELD","",hijo1left,hijo1right);
+                                    padre.agregarHijo( hijo1);
+                                    padre.agregarHijo( hijo2);
+                                    RESULT = padre;
+                                :}
+                                |etiquetaA textfield L_ATRIBUTOS:hijo1 etiquetaC etiquetaA diagonal textfield etiquetaC
+                                {:
+                                    Nodo padre = new Nodo("TEXTFIELD","",hijo1left,hijo1right);
+                                    padre.agregarHijo( hijo1);
+                                    RESULT = padre;
+                                :}
+;
+TEXT              ::=           etiquetaA text L_ATRIBUTOS:hijo1 etiquetaC TIPO:hijo2 etiquetaA diagonal text etiquetaC
+                                {:
+                                    Nodo padre = new Nodo("TEXT","",hijo1left,hijo1right);
+                                    padre.agregarHijo( hijo1);
+                                    padre.agregarHijo( hijo2);
+                                    RESULT = padre;
+                                :}
+                                |etiquetaA text L_ATRIBUTOS:hijo1 etiquetaC etiquetaA diagonal text etiquetaC
+                                {:
+                                    Nodo padre = new Nodo("TEXT","",hijo1left,hijo1right);
+                                    padre.agregarHijo( hijo1);
+                                    RESULT = padre;
+                                :}
+;
+IMAGE             ::=           etiquetaA image L_ATRIBUTOS:hijo1 etiquetaC
+                                {:
+                                    Nodo padre = new Nodo("IMAGE","",hijo1left,hijo1right);
+                                    padre.agregarHijo( hijo1);
+                                    RESULT = padre;
+                                :}
+;
+LIST              ::=           etiquetaA list L_ATRIBUTOS:hijo1 etiquetaC ELEMENTS:hijo2  DEFAULT:hijo3 etiquetaA diagonal list etiquetaC
+                                {:
+                                    Nodo padre = new Nodo("LIST","",hijo1left,hijo1right);
+                                    padre.agregarHijo(hijo1);
+                                    padre.agregarHijo(hijo2);
+                                    padre.agregarHijo(hijo3);
+                                    RESULT = padre;
+                                :}
+                                |etiquetaA list L_ATRIBUTOS:hijo1 etiquetaC ELEMENTS:hijo2  etiquetaA diagonal list etiquetaC
+                                {:
+                                    Nodo padre = new Nodo("LIST","",hijo1left,hijo1right);
+                                    padre.agregarHijo(hijo1);
+                                    padre.agregarHijo(hijo2);
+                                    RESULT = padre;
+                                :}
+;
+
+ELEMENTS          ::=           etiquetaA elements etiquetaC L_ITEMS:hijo1 etiquetaA diagonal elements etiquetaC
+                                {:
+                                    RESULT = hijo1;
+                                :}
+;
+DEFAULT           ::=           etiquetaA p_default etiquetaC TIPO:hijo1 etiquetaA diagonal p_default etiquetaC
+                                {:
+                                    Nodo padre = new Nodo("DEFAULT","",hijo1left,hijo1right);
+                                    padre.agregarHijo(hijo1);
+                                    RESULT = padre;
+                                :}
+;
+
+L_ITEMS           ::=          L_ITEMS:hijo1 ITEM:hijo3
+                                {:
+                                    hijo1.agregarHijo(hijo3);
+                                    RESULT = hijo1;
+                                :}
+                                |ITEM:hijo1
+                                {:
+                                    Nodo padre = new Nodo("L_ITEMS","",hijo1left,hijo1right);
+                                    padre.agregarHijo( hijo1);
+                                    RESULT = padre;
+                                :}
+;
+
+
+ITEM              ::=          etiquetaA item etiquetaC  TIPO:hijo1  etiquetaA diagonal item etiquetaC
+                                {:
+                                    RESULT = hijo1;
+                                :}
+;
+
+SPINNER           ::=          etiquetaA spinner  L_ATRIBUTOS:hijo1 etiquetaC TIPO:hijo2 etiquetaA   diagonal spinner etiquetaC
+                                {:
+                                    Nodo padre = new Nodo("SPINNER","",hijo1left,hijo1right);
+                                    padre.agregarHijo(hijo1);
+                                    padre.agregarHijo(hijo2);
+                                    RESULT = padre;
+                                :}
+;
+
+L_ATRIBUTOS       ::=          L_ATRIBUTOS :hijo1 ATRIBUTOS :hijo3
+                                {:
+                                    hijo1.agregarHijo(hijo3);
+                                    RESULT = hijo1;
+                                :}
+                               |ATRIBUTOS :hijo1
+                                {:
+                                    Nodo padre = new Nodo("L_ATRIBUTOS","",hijo1left,hijo1right);
+                                    padre.agregarHijo( hijo1);
+                                    RESULT = padre;
+                                :}
+;
+
+
+ATRIBUTOS         ::=          atributo:a igual TIPO:b
+                                {:
+
+                                    if (a.toLowerCase().equals("color") && !b.valor.contains("#")) {
+                                        b.valor = ConvertirColor(b.valor.replace("\"", ""));
+                                    }
+
+                                    Nodo padre = new Nodo("ATRIBUTOS ","",aleft,aright);
+                                    padre.agregarHijo(new Nodo("ID", a, aleft, aright));
+                                    padre.agregarHijo(b);
+                                    RESULT = padre;
+                                :}
+;
+
+TIPO              ::=          p_cadena:a {:RESULT = new Nodo("STRING", a.replace("\"",""), aleft, aright);:}
+                              |numeroentero:a {:RESULT = new Nodo("INT", a, aleft, aright);:}
+                              |numeronegativo:a {:RESULT = new Nodo("INT", a, aleft, aright);:}
+                              |id:a {:RESULT = new Nodo("ID", a, aleft, aright);:}
+                              |llaveIzq EXPRESION:a llaveDer {:RESULT = a;:}
+;
+
+ASIGNACION         ::=          ASIGNACION_VAR:a {: RESULT =  a;  :}
+                                |ASIGNACION_ARRAY:a {: RESULT =  a;  :}
+;
+
+INSERT_IMPORT       ::=         etiquetaA diagonal id:a etiquetaC
+                                {:
+                                    Nodo padre = new Nodo("INSERT_IMPORT","",aleft,aright);
+                                    padre.agregarHijo(new Nodo("ID", a, aleft, aright));
+                                    RESULT = padre;
+                                :}
+;
+/*-----------------------------------     CICLOS   ----------------------------------------------*/
+/**********************************IF********************************/
+IF                ::=           SI:a 
+                                {:
+                                    Nodo padre = new Nodo("IF","",aleft,aright);
+                                    padre.agregarHijo(a);
+                                    RESULT = padre;
+                                :}
+                                |SI:hijo1 L_SINO_SI:hijo2
+                                {:
+                                    Nodo padre = new Nodo("IF","",hijo1left,hijo1right);
+                                    padre.agregarHijo(hijo1);
+                                    padre.agregarHijo(hijo2);
+                                    RESULT = padre;
+                                :}
+                                |SI:hijo1 L_SINO_SI:hijo2 SINO:hijo3
+                                {:
+                                    Nodo padre = new Nodo("IF","",hijo1left,hijo1right);
+                                    padre.agregarHijo(hijo1);
+                                    padre.agregarHijo(hijo2);
+                                    padre.agregarHijo(hijo3);
+                                    RESULT = padre;
+                                :}
+                                |SI:hijo1 SINO:hijo2
+                                {:
+                                    Nodo padre = new Nodo("IF","",hijo1left,hijo1right);
+                                    padre.agregarHijo(hijo1);
+                                    padre.agregarHijo(hijo2);
+                                    RESULT = padre;
+                                :}
+;
+
+SI                 ::=         si parentesisIzq EXPRESION:hijo1 parentesisDer BLOQUE:hijo2
+                                {:
+                                    Nodo padre = new Nodo("SI","",hijo1left,hijo1right);
+                                    padre.agregarHijo(hijo1);
+                                    padre.agregarHijo(hijo2);
+                                    RESULT = padre;
+                                :}
+;
+
+
+L_SINO_SI       ::=           L_SINO_SI:hijo1 SINO_SI:hijo3
+                                {:
+                                    hijo1.agregarHijo(hijo3);
+                                    RESULT = hijo1;
+                                :}
+                               |SINO_SI:hijo1
+                                {:
+                                    Nodo padre = new Nodo("L_SINO_SI","",hijo1left,hijo1right);
+                                    padre.agregarHijo( hijo1);
+                                    RESULT = padre;
+                                :}
+;
+
+
+SINO_SI            ::=          sino si parentesisIzq EXPRESION:hijo1 parentesisDer BLOQUE:hijo2
+                                {:
+                                    Nodo padre = new Nodo("SINO_SI","",hijo1left,hijo1right);
+                                    padre.agregarHijo( hijo1);
+                                    padre.agregarHijo( hijo2);
+                                    RESULT = padre;
+                                :}
+;
+
+SINO               ::=          sino BLOQUE:hijo1
+                                {:
+                                    Nodo padre = new Nodo("SINO","",hijo1left,hijo1right);
+                                    padre.agregarHijo( hijo1);
+                                    RESULT = padre;
+                                :}
+;   
+
+
+/**********************************REPETIR********************************/
+
+REPETIR           ::=            repetir parentesisIzq EXPRESION:hijo1 parentesisDer BLOQUE:hijo2
+                                {:
+                                    Nodo padre = new Nodo("REPETIR","",hijo1left,hijo1right);
+                                    padre.agregarHijo(hijo1);
+                                    padre.agregarHijo(hijo2);
+                                    RESULT = padre;
+                                :}
+;
+
+/**********************************MIENTRAS********************************/
+
+MIENTRAS          ::=            mientras parentesisIzq EXPRESION:hijo1 parentesisDer BLOQUE:hijo2
+                                {:
+                                    Nodo padre = new Nodo("MIENTRAS","",hijo1left,hijo1right);
+                                    padre.agregarHijo(hijo1);
+                                    padre.agregarHijo(hijo2);
+                                    RESULT = padre;
+                                :}
+;
+
+
+
+/**********************************IMPRIMIR********************************/
+
+IMPRIMIR          ::=            imprimir parentesisIzq L_IMPRIMIR:hijo1 parentesisDer pyc
+                                {:
+                                    Nodo padre = new Nodo("IMPRIMIR","",hijo1left,hijo1right);
+                                    padre.agregarHijo(hijo1);
+                                    RESULT = padre;
+                                :} 
+;
+
+/*-----------------------------------  VARIABLES----------------------------------------------*/
+
+
+//var a =0, b=5 ,c,e,f;
+DECLARACION_VAR    ::=          var:a L_ID:hijo1  pyc
+                                {:
+                                    Nodo padre = new Nodo("DECLARACION_VAR","",aleft,aright);
+                                    padre.agregarHijo( hijo1);
+                                    RESULT = padre;
+                                :}   
+;
+
+L_ID              ::=          L_ID:hijo1 coma ASIGNAR:b
+                                {:
+                                    hijo1.agregarHijo(b);
+                                    RESULT = hijo1;
+                                :}
+                                |ASIGNAR:b
+                                 {:
+                                    Nodo padre = new Nodo("LISTA_VARIABLES","",bleft,bright); 
+                                    padre.agregarHijo(b);
+                                    RESULT = padre;
+                                 :}
+
+;
+
+ASIGNAR ::=                      id:a igual EXPRESION:b 
+                                 {:
+                                    Nodo padre = new Nodo("ASIGNAR","",aleft,aright);
+                                    padre.agregarHijo(new Nodo("ID", a, aleft, aright));
+                                    padre.agregarHijo(b);
+                                    RESULT = padre;
+                                 :}
+                                 |id:a
+                                 {:
+                                    Nodo padre = new Nodo("ASIGNAR","",aleft,aright);
+                                    padre.agregarHijo(new Nodo("ID", a, aleft, aright));
+                                    RESULT = padre;
+                                 :}
+;
+
+ASIGNACION_VAR     ::=          id:a igual EXPRESION:hijo1 pyc
+                                {:
+                                    Nodo padre = new Nodo("ASIGNACION_VAR","",hijo1left,hijo1right);
+                                    padre.agregarHijo(new Nodo("ID", a, aleft, aright));
+                                    padre.agregarHijo(hijo1);
+                                    RESULT = padre;
+                                :}
+;
+/*-----------------------------------   ARREGLOS----------------------------------------------*/
+
+DECLARACION_ARRAY ::=           var ACCESO:hijo1  pyc 
+                                {:
+                                    Nodo padre = new Nodo("DECLARACION_ARRAY","",hijo1left, hijo1right);
+                                    padre.agregarHijo(hijo1);
+                                    RESULT = padre;
+                                :}
+                               |var id:a igual llaveIzq L_EXPRESIONES:hijo2 llaveDer pyc
+                                {:
+                                    Nodo padre = new Nodo("DECLARACION_ARRAY","",aleft, aright);
+                                    padre.agregarHijo(new Nodo("ID", a, aleft, aright));
+                                    padre.agregarHijo(hijo2);
+                                    RESULT = padre;
+                                :}
+;
+
+L_EXPRESIONES      ::=           L_EXPRESIONES:hijo1 coma EXPRESION:hijo2
+                                {:
+                                    hijo1.agregarHijo(hijo2);
+                                    RESULT = hijo1;
+                                :}
+                                 |EXPRESION:hijo1
+                                {:
+                                    Nodo padre = new Nodo("L_EXPRESIONES","",hijo1left,hijo1right);
+                                    padre.agregarHijo(hijo1);
+                                    RESULT = padre;
+                                :}
+;
+
+/*----------------------------------OPERACION DE EXPRESIONES----------------------------------------------*/
+
+
+
+L_IMPRIMIR      ::=              L_IMPRIMIR:hijo1 mas EXPRESION:hijo2
+                                {:
+                                    hijo1.agregarHijo(hijo2);
+                                    RESULT = hijo1;
+                                :}
+                                 |EXPRESION:hijo1
+                                {:
+                                    RESULT = hijo1;
+                                :}
+;
+
+
+VALOR_ARRAY     ::=             ACCESO:a 
+                                {:
+                                    Nodo padre = new Nodo("VALOR_ARRAY", "", aleft, aright);
+                                    padre.agregarHijo(a.hijos.get(0));
+                                    padre.agregarHijo(a.hijos.get(1));
+                                    RESULT = padre;
+                                :}
+
+
+;
+
+ACCESO         ::=         id:a corcheteIzq  EXPRESION:hijo2  corcheteDer
+                                {:
+                                    Nodo padre = new Nodo("ACCESO","",aleft, aright);
+                                    padre.agregarHijo(new Nodo("ID", a, aleft, aright));
+                                    padre.agregarHijo(hijo2);
+                                    RESULT = padre;
+                                :}
+;
+
+ASIGNACION_ARRAY     ::=       ACCESO:hijo1 igual EXPRESION:hijo2 pyc
+                                {:
+                                    Nodo padre = new Nodo("ASIGNACION_ARRAY","",hijo1left, hijo1right);
+                                    padre.agregarHijo(hijo1);
+                                    padre.agregarHijo(hijo2);
+                                    RESULT = padre;
+                                :}
+;
+
+EXPRESION            ::= OPERACION:a {:RESULT =a;  :}
+;
+
+OPERACION          ::=           OPERACION:hijo1  and  OPERACION:hijo2
+                                 {:
+                                    Nodo padre = new Nodo("OPERACION","",hijo1left,hijo1right);
+                                    padre.agregarHijo( hijo1);
+                                    padre.agregarHijo( new Nodo("&&","",hijo1left,hijo1right));
+                                    padre.agregarHijo( hijo2);
+                                    RESULT = padre;
+                                :}
+                                | OPERACION:hijo1  or  OPERACION:hijo2
+                                 {:
+                                    Nodo padre = new Nodo("OPERACION","",hijo1left,hijo1right);
+                                    padre.agregarHijo( hijo1);
+                                    padre.agregarHijo( new Nodo("||","",hijo1left,hijo1right));
+                                    padre.agregarHijo( hijo2);
+                                    RESULT = padre;
+                                :}
+                                | OPERACION:hijo1  xor  OPERACION:hijo2
+                                 {:
+                                    Nodo padre = new Nodo("OPERACION","",hijo1left,hijo1right);
+                                    padre.agregarHijo( hijo1);
+                                    padre.agregarHijo( new Nodo("^","",hijo1left,hijo1right));
+                                    padre.agregarHijo( hijo2);
+                                    RESULT = padre;
+                                :}
+                                | negacion  OPERACION:hijo1
+                                {:
+                                    Nodo padre = new Nodo("OPERACION","",hijo1left,hijo1right);
+                                    padre.agregarHijo( new Nodo("!","",hijo1left,hijo1right));
+                                    padre.agregarHijo( new Nodo("!","",hijo1left,hijo1right));
+                                    padre.agregarHijo( hijo1);
+                                    RESULT = padre;
+                                :}
+                                | OPERACION:hijo1  menor  OPERACION:hijo2
+                                 {:
+                                    Nodo padre = new Nodo("OPERACION","",hijo1left,hijo1right);
+                                    padre.agregarHijo( hijo1);
+                                    padre.agregarHijo( new Nodo("<","",hijo1left,hijo1right));
+                                    padre.agregarHijo( hijo2);
+                                    RESULT = padre;
+                                :}
+                                | OPERACION:hijo1  mayor  OPERACION:hijo2
+                                 {:
+                                    Nodo padre = new Nodo("OPERACION","",hijo1left,hijo1right);
+                                    padre.agregarHijo( hijo1);
+                                    padre.agregarHijo( new Nodo(">","",hijo1left,hijo1right));
+                                    padre.agregarHijo( hijo2);
+                                    RESULT = padre;
+                                :}
+                                | OPERACION:hijo1  mayorigual  OPERACION:hijo2
+                                 {:
+                                    Nodo padre = new Nodo("OPERACION","",hijo1left,hijo1right);
+                                    padre.agregarHijo( hijo1);
+                                    padre.agregarHijo( new Nodo(">=","",hijo1left,hijo1right));
+                                    padre.agregarHijo( hijo2);
+                                    RESULT = padre;
+                                :}
+                                | OPERACION:hijo1  menorigual  OPERACION:hijo2
+                                 {:
+                                    Nodo padre = new Nodo("OPERACION","",hijo1left,hijo1right);
+                                    padre.agregarHijo( hijo1);
+                                    padre.agregarHijo( new Nodo("<=","",hijo1left,hijo1right));
+                                    padre.agregarHijo( hijo2);
+                                    RESULT = padre;
+                                :}
+                                | OPERACION:hijo1  igualdad  OPERACION:hijo2
+                                 {:
+                                    Nodo padre = new Nodo("OPERACION","",hijo1left,hijo1right);
+                                    padre.agregarHijo( hijo1);
+                                    padre.agregarHijo( new Nodo("==","",hijo1left,hijo1right));
+                                    padre.agregarHijo( hijo2);
+                                    RESULT = padre;
+                                :}
+                                | OPERACION:hijo1  diferente  OPERACION   :hijo2
+                                 {:
+                                    Nodo padre = new Nodo("OPERACION","",hijo1left,hijo1right);
+                                    padre.agregarHijo( hijo1);
+                                    padre.agregarHijo( new Nodo("!=","",hijo1left,hijo1right));
+                                    padre.agregarHijo( hijo2);
+                                    RESULT = padre;
+                                :}                                           
+                                | menos  OPERACION:hijo1                         
+                                {:
+                                    RESULT = new Nodo(hijo1.estado, "-"+hijo1.valor, hijo1left, hijo1right);
+                                :}  
+                                |OPERACION:hijo1 mas OPERACION:hijo2
+                                {:
+                                    Nodo padre = new Nodo("OPERACION","",hijo1left,hijo1right);
+                                    padre.agregarHijo( hijo1);
+                                    padre.agregarHijo( new Nodo("SUMA","",hijo1left,hijo1right));
+                                    padre.agregarHijo( hijo2);
+                                    RESULT = padre;
+                                :}
+                                 |OPERACION:hijo1 menos OPERACION:hijo2
+                                 {:
+                                    Nodo padre = new Nodo("OPERACION","",hijo1left,hijo1right);
+                                    padre.agregarHijo( hijo1);
+                                    padre.agregarHijo( new Nodo("RESTA","",hijo1left,hijo1right));
+                                    padre.agregarHijo( hijo2);
+                                    RESULT = padre;
+                                :}
+                                 |OPERACION:hijo1 multi OPERACION:hijo2
+                                {:
+                                    Nodo padre = new Nodo("OPERACION","",hijo1left,hijo1right);
+                                    padre.agregarHijo( hijo1);
+                                    padre.agregarHijo( new Nodo("MULTIPLICACION","",hijo1left,hijo1right));
+                                    padre.agregarHijo( hijo2);
+                                    RESULT = padre;
+                                :}
+                               |OPERACION:hijo1 division OPERACION:hijo2
+                                {:
+                                    Nodo padre = new Nodo("OPERACION","",hijo1left,hijo1right);
+                                    padre.agregarHijo( hijo1);
+                                    padre.agregarHijo( new Nodo("DIVISION","",hijo1left,hijo1right));
+                                    padre.agregarHijo( hijo2);
+                                    RESULT = padre;
+                                :}
+                                |OPERACION:hijo1 pow OPERACION:hijo2
+                                {:
+                                    Nodo padre = new Nodo("OPERACION","",hijo1left,hijo1right);
+                                    padre.agregarHijo( hijo1);
+                                    padre.agregarHijo( new Nodo("POTENCIA","",hijo1left,hijo1right));
+                                    padre.agregarHijo( hijo2);
+                                    RESULT = padre;
+                                :}
+                                | parentesisIzq OPERACION:hijo1 parentesisDer 
+                                {:
+                                    RESULT = hijo1;
+                                :}  
+                                | numeroentero:a {: RESULT = new Nodo("INT", a, aleft, aright);:}
+                                | numerodecimal:a {:RESULT = new Nodo("DOUBLE", a, aleft, aright); :}
+                                | id:a {:RESULT = new Nodo("ID", a, aleft, aright);:}
+                                | p_char:a {:RESULT = new Nodo("CHAR", a.replace("'",""), aleft, aright);:}
+                                | p_true:a {:RESULT = new Nodo("BOOLEAN", a, aleft, aright);:}
+                                | p_false:a {:RESULT = new Nodo("BOOLEAN", a, aleft, aright);:}
+                                | p_cadena:a {:RESULT = new Nodo("STRING", a.replace("\"",""), aleft, aright);:}
+                                | VALOR_ARRAY:a {: RESULT =  a; :}
+            ;

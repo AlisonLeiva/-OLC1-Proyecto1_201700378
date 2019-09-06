@@ -1,0 +1,68 @@
+
+
+
+component Panel(){
+
+var holis = "DARWIN Y ALISON";
+var variable10 = "Mensaje de Alerta!";
+
+return (
+<Panel id= primary x = 63 y = 97 height = 158 width = 849 color = "pink" border = 5>
+
+<text x = 238 y = 24 height = 54 width = 337 color="blue" className = "titulo1">
+{holis}
+</text>
+<button x = 352 y = 94 height = 33 width = 88 onclick = {variable10}>{nombreBoton}
+</button>
+
+</Panel>
+);
+}
+
+
+
+component TextField() {
+var mensaje_bienvenida = "SOY UN TXT EXITOSO :D";
+
+return (
+<textfield x = 63 y = 35 height = 26 width = 228 className = "titulo1">
+{mensaje_bienvenida}
+</textfield>
+);
+}
+
+
+component Lista() {
+var var1 = 345;
+var item1 = "ITEM 1";
+return (
+<list id= primary x = {var1} y = 35 height = 26 width = 164 color = "red" border = 2>
+<elements>
+<item> {item1}</item>
+<item> "Física aplicada"</item>
+<item> "Organización computacional"</item>
+</elements>
+<default> 2 </default>
+</list>
+);
+}
+
+
+component Spinner() {
+
+Var condicion = true;
+Mientras (condicion) {
+Imprimir("ciclo...") ;
+}
+
+return (
+<spinner id= primary x = 562 y = 35 height = 26 width = 71 color = "yellow" className = "spinnerPro" max = 30 min = -50> 666 </ spinner >
+);
+}
+
+component Imagen() {
+return (
+
+<image x = 64 y = 372 height = 447 width = 831 src = "C:\Users\GAMING\Pictures\157514bb2c1f15389ef71cff5f76e0b8.0.jpeg">
+);
+}

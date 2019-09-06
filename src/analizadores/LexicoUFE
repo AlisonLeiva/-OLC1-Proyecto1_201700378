@@ -1,0 +1,139 @@
+package analizadores;
+import proyecto1.Reporte;
+import java_cup.runtime.Symbol;
+
+%% 
+%class LexicoUFE
+%public 
+%line 
+%char 
+%cup 
+%cupsym sym3
+%unicode
+%ignorecase
+
+
+
+%init{ 
+    yyline = 1; 
+    yychar = 1; 
+%init} 
+
+
+%state COMPONENTE, COMENTARIOH, COMENTARIO
+    comentario_linea =("//".*\r\n)|("//".*\n)|("//".*\r)
+    variable=[A-Za-z]["_"0-9A-Za-z]*
+    pchar="'"[^]"'"  
+    numeronegativo = "-"[0-9]+
+    NUMBER = [0-9]+
+    DECIMAL = [0-9]+"."[0-9]+
+    salto = \r\t\f
+    espacios = {salto}|[ \r\t]+
+    color = [\"]"#"([A-Za-z]|[0-9])+[\"]
+    cadena = [\"]([^\"\n]|(\\\"))*[\"]
+    separador ={salto}|[ \r\t]*
+    preturn = "return"{separador}"("
+%%
+
+
+<YYINITIAL> "}" {return new Symbol(sym3.llaveDer,yyline,yychar, yytext().trim().toLowerCase());} 
+<YYINITIAL> "{" {return new Symbol(sym3.llaveIzq,yyline,yychar, yytext().trim().toLowerCase());} 
+<YYINITIAL> "(" {return new Symbol(sym3.parentesisIzq,yyline,yychar, yytext().trim().toLowerCase());} 
+<YYINITIAL> ")" {return new Symbol(sym3.parentesisDer,yyline,yychar, yytext().trim().toLowerCase());} 
+<YYINITIAL> "[" {return new Symbol(sym3.corcheteIzq,yyline,yychar, yytext().trim().toLowerCase());} 
+<YYINITIAL> "]" {return new Symbol(sym3.corcheteDer,yyline,yychar, yytext().trim().toLowerCase());} 
+<YYINITIAL> "," {return new Symbol(sym3.coma,yyline,yychar, yytext().trim().toLowerCase());} 
+<YYINITIAL> ";" {return new Symbol(sym3.pyc,yyline,yychar, yytext().trim().toLowerCase());} 
+<YYINITIAL> "render" {return new Symbol(sym3.render,yyline,yychar, yytext().trim().toLowerCase());} 
+<YYINITIAL> "component" {return new Symbol(sym3.component,yyline,yychar, yytext().trim().toLowerCase());} 
+<YYINITIAL> "var" {return new Symbol(sym3.var,yyline,yychar, yytext().trim().toLowerCase());} 
+<YYINITIAL> "import" {return new Symbol(sym3.p_import,yyline,yychar, yytext().trim().toLowerCase());} 
+<YYINITIAL> "from" {return new Symbol(sym3.from,yyline,yychar, yytext().trim().toLowerCase());} 
+<YYINITIAL>  "<" {return new Symbol(sym3.menor,yyline,yychar, yytext().trim().toLowerCase());} 
+<YYINITIAL>  "<=" {return new Symbol(sym3.menorigual,yyline,yychar, yytext().trim().toLowerCase());} 
+<YYINITIAL>  ">" {return new Symbol(sym3.mayor,yyline,yychar, yytext().trim().toLowerCase());} 
+<YYINITIAL>  ">=" {return new Symbol(sym3.mayorigual,yyline,yychar, yytext().trim().toLowerCase());} 
+<YYINITIAL>  "==" {return new Symbol(sym3.igualdad,yyline,yychar, yytext().trim().toLowerCase());} 
+<YYINITIAL>  "!" {return new Symbol(sym3.negacion,yyline,yychar, yytext().trim().toLowerCase());} 
+<YYINITIAL>  "!=" {return new Symbol(sym3.diferente,yyline,yychar, yytext().trim().toLowerCase());} 
+<YYINITIAL>  "&&" {return new Symbol(sym3.and,yyline,yychar, yytext().trim().toLowerCase());} 
+<YYINITIAL>  "||" {return new Symbol(sym3.or,yyline,yychar, yytext().trim().toLowerCase());} 
+<YYINITIAL>  "^" {return new Symbol(sym3.xor,yyline,yychar, yytext().trim().toLowerCase());} 
+<YYINITIAL>  "=" {return new Symbol(sym3.igual,yyline,yychar, yytext().trim().toLowerCase());} 
+<YYINITIAL>  "si" {return new Symbol(sym3.si,yyline,yychar, yytext().trim().toLowerCase());} 
+<YYINITIAL>  "sino" {return new Symbol(sym3.sino,yyline,yychar, yytext().trim().toLowerCase());} 
+<YYINITIAL>  "repetir" {return new Symbol(sym3.repetir,yyline,yychar, yytext().trim().toLowerCase());}
+<YYINITIAL>  "mientras" {return new Symbol(sym3.mientras,yyline,yychar, yytext().trim().toLowerCase());} 
+<YYINITIAL>  "imprimir" {return new Symbol(sym3.imprimir,yyline,yychar, yytext().trim().toLowerCase());} 
+<YYINITIAL>  "+" {return new Symbol(sym3.mas,yyline,yychar, yytext().trim().toLowerCase());} 
+<YYINITIAL>  "-" {return new Symbol(sym3.menos,yyline,yychar, yytext().trim().toLowerCase());} 
+<YYINITIAL>  "*" {return new Symbol(sym3.multi,yyline,yychar, yytext().trim().toLowerCase());} 
+<YYINITIAL>  "/" {return new Symbol(sym3.division,yyline,yychar, yytext().trim().toLowerCase());} 
+<YYINITIAL> "pow" {return new Symbol(sym3.pow,yyline,yychar, yytext().trim().toLowerCase());} 
+<YYINITIAL> "true" {return new Symbol(sym3.p_true,yyline,yychar, yytext().trim().toLowerCase());} 
+<YYINITIAL> "false" {return new Symbol(sym3.p_false,yyline,yychar, yytext().trim().toLowerCase());} 
+<YYINITIAL> "/*" {yybegin(COMENTARIO);}
+<COMENTARIO> ["*"] {}
+<COMENTARIO> [^"*/"]* {}
+<COMENTARIO> "*/" {yybegin(YYINITIAL);}
+
+
+
+<YYINITIAL> \n {yychar=1;}
+<YYINITIAL> {espacios} {}
+<YYINITIAL> {comentario_linea} {}
+<YYINITIAL> "return" {yybegin(COMPONENTE); return new Symbol(sym3.inicioReturn,yyline,yychar, yytext().trim().toLowerCase());} 
+<YYINITIAL> {DECIMAL} {return new Symbol(sym3.numerodecimal,yyline,yychar, yytext().trim().toLowerCase());} 
+<YYINITIAL> {NUMBER} {return new Symbol(sym3.numeroentero,yyline,yychar, yytext().trim().toLowerCase());} 
+<YYINITIAL> {cadena} {return new Symbol(sym3.p_cadena,yyline,yychar, yytext().trim());} 
+<YYINITIAL> {variable} {return new Symbol(sym3.id,yyline,yychar, yytext().trim().toLowerCase());} 
+<YYINITIAL> {pchar} {return new Symbol(sym3.p_char,yyline,yychar, yytext().trim().toLowerCase());} 
+
+
+<COMPONENTE>  ("id"|"x"|"y"|"height"|"width"|"color"|"border"|"className"|"onclick"|"max"|"min"|"src") { return new Symbol(sym3.atributo,yyline,yychar, yytext().trim().toLowerCase());} 
+<COMPONENTE> "}" {return new Symbol(sym3.llaveDer,yyline,yychar, yytext().trim().toLowerCase());} 
+<COMPONENTE> "{" {return new Symbol(sym3.llaveIzq,yyline,yychar, yytext().trim().toLowerCase());} 
+<COMPONENTE> "(" {return new Symbol(sym3.parentesisIzq,yyline,yychar, yytext().trim().toLowerCase());} 
+<COMPONENTE>  "<" {return new Symbol(sym3.etiquetaA,yyline,yychar, yytext().trim().toLowerCase());} 
+<COMPONENTE>  ">" {return new Symbol(sym3.etiquetaC,yyline,yychar, yytext().trim().toLowerCase());} 
+<COMPONENTE>  "elements" {return new Symbol(sym3.elements,yyline,yychar, yytext().trim().toLowerCase());} 
+<COMPONENTE>  "item" {return new Symbol(sym3.item,yyline,yychar, yytext().trim().toLowerCase());} 
+<COMPONENTE> "panel" {return new Symbol(sym3.panel,yyline,yychar, yytext().trim().toLowerCase());} 
+<COMPONENTE> "text" {return new Symbol(sym3.text,yyline,yychar, yytext().trim().toLowerCase());} 
+<COMPONENTE> "textfield" {return new Symbol(sym3.textfield,yyline,yychar, yytext().trim().toLowerCase());} 
+<COMPONENTE> "button" {return new Symbol(sym3.boton,yyline,yychar, yytext().trim().toLowerCase());} 
+<COMPONENTE> "list" {return new Symbol(sym3.list,yyline,yychar, yytext().trim().toLowerCase());} 
+<COMPONENTE>  "spinner" {return new Symbol(sym3.spinner,yyline,yychar, yytext().trim().toLowerCase());} 
+<COMPONENTE>  "image" {return new Symbol(sym3.image,yyline,yychar, yytext().trim().toLowerCase());} 
+<COMPONENTE> "[" {return new Symbol(sym3.corcheteIzq,yyline,yychar, yytext().trim().toLowerCase());} 
+<COMPONENTE> "]" {return new Symbol(sym3.corcheteDer,yyline,yychar, yytext().trim().toLowerCase());} 
+<COMPONENTE>  "default" {return new Symbol(sym3.p_default,yyline,yychar, yytext().trim().toLowerCase());} 
+<COMPONENTE>  "=" {return new Symbol(sym3.igual,yyline,yychar, yytext().trim().toLowerCase());} 
+<COMPONENTE>  "/" {return new Symbol(sym3.diagonal,yyline,yychar, yytext().trim().toLowerCase());} 
+<COMPONENTE>  "+" {return new Symbol(sym3.mas,yyline,yychar, yytext().trim().toLowerCase());} 
+<COMPONENTE>  "-" {return new Symbol(sym3.menos,yyline,yychar, yytext().trim().toLowerCase());} 
+<COMPONENTE>  "*" {return new Symbol(sym3.multi,yyline,yychar, yytext().trim().toLowerCase());} 
+<COMPONENTE>  "/" {return new Symbol(sym3.division,yyline,yychar, yytext().trim().toLowerCase());} 
+<COMPONENTE> "pow" {return new Symbol(sym3.pow,yyline,yychar, yytext().trim().toLowerCase());} 
+<COMPONENTE> "true" {return new Symbol(sym3.p_true,yyline,yychar, yytext().trim().toLowerCase());} 
+<COMPONENTE> "false" {return new Symbol(sym3.p_false,yyline,yychar, yytext().trim().toLowerCase());} 
+<COMPONENTE> [\n] {yychar=1;}
+<COMPONENTE> ");" {yybegin(YYINITIAL); return new Symbol(sym3.finReturn,yyline,yychar, yytext().trim().toLowerCase());}
+<COMPONENTE> "/*" {yybegin(COMENTARIOH);}
+<COMENTARIOH> [^"*/"]* {}
+<COMENTARIOH> "*/" {yybegin(COMPONENTE);}
+<COMPONENTE> [\n] {yychar=1;}
+<COMPONENTE> {espacios} {}
+<COMPONENTE> {comentario_linea} {}
+<COMPONENTE> {NUMBER} {return new Symbol(sym3.numeroentero,yyline,yychar, yytext().trim().toLowerCase());} 
+<COMPONENTE> {numeronegativo} {return new Symbol(sym3.numeronegativo,yyline,yychar, yytext().trim().toLowerCase());} 
+<COMPONENTE> {cadena} {return new Symbol(sym3.p_cadena,yyline,yychar, yytext().trim());} 
+<COMPONENTE> {variable} {return new Symbol(sym3.id,yyline,yychar, yytext().trim().toLowerCase());} 
+<COMPONENTE> {color} {return new Symbol(sym3.color,yyline,yychar, yytext().trim().toLowerCase());} 
+
+. 
+{
+            Reporte.agregarReporte(new Reporte("Lexico", "[UFE] caracter malo: "+yytext().trim().toLowerCase(),yyline,yychar));
+}
+
+

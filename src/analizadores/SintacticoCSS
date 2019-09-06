@@ -1,0 +1,197 @@
+
+package analizadores;
+import java_cup.runtime.*;
+import CSS.*;
+import java.util.LinkedList;
+import proyecto1.Reporte;
+
+parser code 
+{:  
+    String estiloActual="";
+    public void syntax_error(Symbol s){ 
+            System.err.println("[CSS] No se esperaba este componente: " + s.value + " linea: "+s.left+" columna: "+s.right);
+            Reporte.agregarReporte(new Reporte("Sintactico", "[CSS] No se esperaba este componente: " + s.value, s.left,s.right));
+           } 
+   
+    public void unrecovered_syntax_error(Symbol s) throws java.lang.Exception{ 
+       
+      System.err.println(s.value + " error falta");
+     
+    }
+
+    private String ConvertirRGB(int r, int g , int b){
+        return String.format("#%02x%02x%02x", r, g, b); 
+    }
+    private String ConvertirColor(String color) {
+        switch (color) {
+            case "red": {
+                return "#ff3333";
+            }
+            case "pink": {
+                return "#ff0080";
+            }
+            case "orange": {
+                return "#ffb266";
+            }
+            case "yellow": {
+                return "#ffff66";
+            }
+            case "purple": {
+                return "#cc00cc";
+            }
+            case "magenta": {
+                return "#f50087";
+            }
+            case "green": {
+                return "#9ff781";
+            }
+            case "blue": {
+                return "#3333ff";
+            }
+            case "brown": {
+                return "#994c00";
+            }
+            case "white": {
+                return "#ffffff";
+            }
+            case "gray": {
+                return "#c0c0c0";
+            }
+            case "black": {
+                return "#202020";
+            } 
+        }
+        return "#CCCCFF";
+    }
+  
+:}  
+
+terminal String llaveDer,llaveIzq,punto,parentesisIzq,parentesisDer,dospuntos,pyc,background,border,
+border_color,border_width,align,font,font_size,font_color,height,width,rgb,tf,alineacion,
+fuente,id,color,coma,numero
+;
+
+non terminal String INICIO, L_COMPONENTE, COMPONENTE, COLOR, NUMERO;
+non terminal LinkedList<AtributoCSS> L_PROPIEDAD;
+non terminal AtributoCSS PROPIEDAD;
+
+
+start with INICIO;
+
+INICIO::=                       L_COMPONENTE
+;
+
+
+L_COMPONENTE::=                 L_COMPONENTE:l COMPONENTE:a {: RESULT = l+a+"\n"; :}
+                                | COMPONENTE:a {:RESULT =a+"\n";:}
+;
+
+
+COMPONENTE::=                   id:id{:estiloActual=id;:} llaveIzq  L_PROPIEDAD:l llaveDer
+                                    {:
+                                      CSS.addEstilo(new CSS(id, l)); 
+                                                   //   RESULT = id+"{\n"+l+"\n}\n";
+                                    :} 
+                                | punto id:id llaveIzq  L_PROPIEDAD:l llaveDer 
+                                    {:
+                                        for (int i = 0; i < CSS.estilos.size(); i++) {
+                                            if (CSS.estilos.get(i).id.equals(estiloActual)) {
+                                                CSS.estilos.get(i).agregarSubEstilo(new CSS(id, l));
+                                            }
+                                        }                                        
+                                       // RESULT = "."+id+"{\n"+l+"\n}\n";
+                                    :} 
+;    
+
+
+L_PROPIEDAD::=                  L_PROPIEDAD:a PROPIEDAD:b 
+                                    {:
+                                        //RESULT =l+a+"\n";
+                                        RESULT = a; RESULT.add(b);
+                                    :}
+                                |PROPIEDAD:a 
+                                    {:
+                                        RESULT = new LinkedList<>(); RESULT.add(a);
+                                    :}
+;
+
+
+PROPIEDAD::=                     border dospuntos tf:tf pyc
+                                    {:
+                                       // RESULT = "border :"+tf;
+                                        RESULT = new AtributoCSS(AtributoCSS.EnumPropiedad.existeBorde, new Nodo("BOOLEAN",tf,tfleft,tfright));
+                                    :}
+                                |background dospuntos COLOR:fondo pyc
+                                    {:
+                                        //RESULT = "background :"+fondo;
+                                        RESULT = new AtributoCSS(AtributoCSS.EnumPropiedad.fondo, new Nodo("STRING",fondo,fondoleft,fondoright));
+
+                                    :}
+                                |border_color dospuntos COLOR:color_borde pyc
+                                    {:
+                                        RESULT = new AtributoCSS(AtributoCSS.EnumPropiedad.color_borde,new Nodo("STRING",color_borde,color_bordeleft,color_borderight));
+                                        //RESULT = "border-color :"+color_borde;
+                                    :}
+                                |border_width dospuntos NUMERO:grosor_borde pyc
+                                    {:
+                                        RESULT = new AtributoCSS(AtributoCSS.EnumPropiedad.grosor_borde, new Nodo("INT",grosor_borde,grosor_bordeleft,grosor_borderight));
+
+                                       /// RESULT = "border-width :"+grosor_borde;
+                                    :}
+                                |align dospuntos alineacion:alineacion pyc
+                                    {:
+                                        RESULT = new AtributoCSS(AtributoCSS.EnumPropiedad.alineacion, new Nodo("STRING",alineacion,alineacionleft,alineacionright));
+                                       // RESULT = "align :"+alineacion;
+                                    :}
+                                |font dospuntos fuente:fuente pyc
+                                    {:
+                                        RESULT = new AtributoCSS(AtributoCSS.EnumPropiedad.fuente, new Nodo("STRING",fuente.replace("\'",""),fuenteleft,fuenteright));
+                                      //  RESULT = "font :"+fuente;
+                                    :}
+                                |font_size dospuntos NUMERO:size_fuente pyc
+                                    {:
+                                        RESULT = new AtributoCSS(AtributoCSS.EnumPropiedad.size_fuente, new Nodo("INT",size_fuente,size_fuenteleft,size_fuenteright));
+                                      //  RESULT = "font-size :"+num;
+                                    :}
+                                |font_color dospuntos COLOR:color_fuente pyc
+                                    {:
+                                        RESULT = new AtributoCSS(AtributoCSS.EnumPropiedad.color_fuente,  new Nodo("STRING",color_fuente,color_fuenteleft,color_fuenteright));
+                                      //  RESULT = "font-color :"+a;
+                                    :}
+
+                                |height dospuntos NUMERO:altura pyc
+                                    {:
+                                        RESULT = new AtributoCSS(AtributoCSS.EnumPropiedad.altura, new Nodo("INT",altura,alturaleft,alturaright));
+                                       // RESULT = "height :"+num;
+                                    :}
+                                |width dospuntos NUMERO:anchura pyc
+                                    {:
+                                        RESULT = new AtributoCSS(AtributoCSS.EnumPropiedad.anchura, new Nodo("INT",anchura,anchuraleft,anchuraright));
+                                       // RESULT = "width :"+num;
+                                    :}
+;
+
+
+COLOR::=                        color:color 
+                                    {:
+                                        RESULT = color;
+                                    :}
+                                |id:id 
+                                    {:
+                                        RESULT = ConvertirColor(id);
+                                    :}
+                                |rgb parentesisIzq numero:a coma numero:b coma numero:c parentesisDer
+                                    {:
+                                        RESULT = ConvertirRGB(Integer.parseInt(a),Integer.parseInt(b),Integer.parseInt(c));
+                                    :}
+;
+
+NUMERO::=                       numero:numero 
+                                    {:
+                                        RESULT = numero;
+                                    :}
+                                |id:id 
+                                    {:
+                                        RESULT = id;
+                                    :}
+;

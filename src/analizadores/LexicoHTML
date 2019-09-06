@@ -1,0 +1,71 @@
+package analizadores;
+import java_cup.runtime.Symbol;
+import proyecto1.Reporte;
+
+%% 
+%class LexicoHTML
+%public 
+%line 
+%char 
+%cup 
+%cupsym sym1
+%unicode
+%ignorecase
+
+
+
+%init{ 
+    yyline = 1; 
+    yychar = 1; 
+%init} 
+
+
+%state TEXTOETIQUETA, COMENTARIO, COMENTARIO_T
+    variable=[A-Za-z]+["_"0-9A-Za-z]*
+    salto = \r\t\f
+    espacios = {salto}|[ \r\t]+
+    cadena = [\"]([^\"\n]|(\\\"))*[\"]
+
+%%
+
+<YYINITIAL> ">" {yybegin(TEXTOETIQUETA); return new Symbol(sym1.mayor,yyline,yychar, yytext().trim().toLowerCase());} 
+<YYINITIAL> "/" {return new Symbol(sym1.diagonal,yyline,yychar, yytext().trim().toLowerCase());} 
+<YYINITIAL> "=" {return new Symbol(sym1.igual,yyline,yychar, yytext().trim().toLowerCase());} 
+<YYINITIAL> "<html" {return new Symbol(sym1.htmlI,yyline,yychar, yytext().trim().toLowerCase());} 
+<YYINITIAL> "html>" {return new Symbol(sym1.htmlF,yyline,yychar, yytext().trim().toLowerCase());} 
+<YYINITIAL> "head" {return new Symbol(sym1.head,yyline,yychar, yytext().trim().toLowerCase());} 
+<YYINITIAL> "body" {return new Symbol(sym1.body,yyline,yychar, yytext().trim().toLowerCase());} 
+<YYINITIAL> "title" {return new Symbol(sym1.title,yyline,yychar, yytext().trim().toLowerCase());} 
+<YYINITIAL> "noufe" {return new Symbol(sym1.noufe,yyline,yychar, yytext().trim().toLowerCase());} 
+<YYINITIAL> "id" {return new Symbol(sym1.id,yyline,yychar, yytext().trim().toLowerCase());} 
+<YYINITIAL> "div" {return new Symbol(sym1.div,yyline,yychar, yytext().trim().toLowerCase());} 
+
+
+<YYINITIAL> "<!--" {yybegin(COMENTARIO);}
+<COMENTARIO> [^"-->"]* {}
+<COMENTARIO> "-->" {yybegin(YYINITIAL);}
+
+<TEXTOETIQUETA> [^"<"]* {return new Symbol(sym1.txtetiqueta,yyline,yychar, yytext().trim().toLowerCase()); }
+<TEXTOETIQUETA> "<!--" {yybegin(COMENTARIO_T);}
+<TEXTOETIQUETA> "<" {yybegin(YYINITIAL);}
+
+<COMENTARIO_T> [^"-->"]* {}
+<COMENTARIO_T> "-->" {yybegin(TEXTOETIQUETA);}
+<TEXTOETIQUETA> [\n] {yychar=1;}
+
+
+<YYINITIAL> \n {yychar=1;}
+<YYINITIAL> {espacios} {}
+<YYINITIAL> {cadena} {return new Symbol(sym1.cadena,yyline,yychar, yytext().trim());} 
+
+
+
+
+
+. 
+{
+    
+            Reporte.agregarReporte(new Reporte("Lexico", "[HTML] caracter malo: "+yytext().trim().toLowerCase(),yyline,yychar));
+}
+
+

@@ -1,0 +1,78 @@
+package analizadores;
+import java_cup.runtime.Symbol;
+import proyecto1.Reporte;
+
+%% 
+%class LexicoCSS
+%public 
+%line 
+%char 
+%cup 
+%cupsym sym2
+%unicode
+%ignorecase
+
+
+
+%init{ 
+    yyline = 1; 
+    yychar = 1; 
+%init} 
+
+
+%state  COMENTARIO
+    comentario_linea =("//".*\r\n)|("//".*\n)|("//".*\r)|("<!".*\r\n"!>")|("<!".*\n"!>")|("<!".*\r"!>")
+    numero = [0-9]+
+    letra = [A-Za-z]+ 
+    variable=[A-Za-z]+["_"0-9A-Za-z]*
+    salto = \r\t\f
+    espacios = {salto}|[ \r\t]+
+    fuentes = [\']([^\"\n]|(\\\"))*[\']
+    color = "#"([A-Za-z]|[0-9])+
+%%
+
+<YYINITIAL> "}" {return new Symbol(sym2.llaveDer,yyline,yychar, yytext().trim().toLowerCase());} 
+<YYINITIAL> "." {return new Symbol(sym2.punto,yyline,yychar, yytext().trim().toLowerCase());} 
+<YYINITIAL> "{" {return new Symbol(sym2.llaveIzq,yyline,yychar, yytext().trim().toLowerCase());} 
+<YYINITIAL> "(" {return new Symbol(sym2.parentesisIzq,yyline,yychar, yytext().trim().toLowerCase());} 
+<YYINITIAL> ")" {return new Symbol(sym2.parentesisDer,yyline,yychar, yytext().trim().toLowerCase());} 
+<YYINITIAL> ":" {return new Symbol(sym2.dospuntos,yyline,yychar, yytext().trim().toLowerCase());} 
+<YYINITIAL> "," {return new Symbol(sym2.coma,yyline,yychar, yytext().trim().toLowerCase());} 
+<YYINITIAL> ";" {return new Symbol(sym2.pyc,yyline,yychar, yytext().trim().toLowerCase());} 
+<YYINITIAL> "background" {return new Symbol(sym2.background,yyline,yychar, yytext().trim().toLowerCase());} 
+<YYINITIAL> "border" {return new Symbol(sym2.border,yyline,yychar, yytext().trim().toLowerCase());} 
+<YYINITIAL> "border-color" {return new Symbol(sym2.border_color,yyline,yychar, yytext().trim().toLowerCase());} 
+<YYINITIAL> "border-width" {return new Symbol(sym2.border_width,yyline,yychar, yytext().trim().toLowerCase());} 
+<YYINITIAL> "align" {return new Symbol(sym2.align,yyline,yychar, yytext().trim().toLowerCase());} 
+<YYINITIAL> "font" {return new Symbol(sym2.font,yyline,yychar, yytext().trim().toLowerCase());} 
+<YYINITIAL> "font-size" {return new Symbol(sym2.font_size,yyline,yychar, yytext().trim().toLowerCase());} 
+<YYINITIAL> "font-color" {return new Symbol(sym2.font_color,yyline,yychar, yytext().trim().toLowerCase());} 
+<YYINITIAL> "height" {return new Symbol(sym2.height,yyline,yychar, yytext().trim().toLowerCase());} 
+<YYINITIAL> "width" {return new Symbol(sym2.width,yyline,yychar, yytext().trim().toLowerCase());} 
+<YYINITIAL> "rgb" {return new Symbol(sym2.rgb,yyline,yychar, yytext().trim().toLowerCase());} 
+<YYINITIAL> ("true"|"false") {return new Symbol(sym2.tf,yyline,yychar, yytext().trim().toLowerCase());} 
+<YYINITIAL> ("left"|"center"|"right") {return new Symbol(sym2.alineacion,yyline,yychar, yytext().trim().toLowerCase());} 
+
+
+<YYINITIAL> "/*" {yybegin(COMENTARIO);}
+<COMENTARIO> ["*"] {}
+<COMENTARIO> [^"*/"]* {}
+<COMENTARIO> "*/" {yybegin(YYINITIAL);}
+
+
+
+
+<YYINITIAL> \n {yychar=1;}
+<YYINITIAL> {espacios} {}
+<YYINITIAL> {variable} {return new Symbol(sym2.id,yyline,yychar, yytext().trim().toLowerCase());} 
+<YYINITIAL> {fuentes} {return new Symbol(sym2.fuente,yyline,yychar, yytext().trim().toLowerCase());} 
+<YYINITIAL> {color} {return new Symbol(sym2.color,yyline,yychar, yytext().trim().toLowerCase());} 
+<YYINITIAL> {numero} {return new Symbol(sym2.numero,yyline,yychar, yytext().trim().toLowerCase());} 
+<YYINITIAL> {comentario_linea} {} 
+
+. 
+{
+            Reporte.agregarReporte(new Reporte("Lexico", "[CSS] caracter malo: "+yytext().trim().toLowerCase(),yyline,yychar));
+}
+
+
