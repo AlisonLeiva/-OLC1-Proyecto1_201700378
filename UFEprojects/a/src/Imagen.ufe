@@ -1,8 +1,0 @@
-
-component Imagen() {
-
-
-return (
-
-<image x = 64 y = 372 height = 447 width = 831 src = "C:\Users\GAMING\Pictures\157514bb2c1f15389ef71cff5f76e0b8.0.jpeg">
-}

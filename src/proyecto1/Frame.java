@@ -19,17 +19,14 @@ import javax.swing.filechooser.FileNameExtensionFilter;
 import javax.swing.table.DefaultTableModel;
 
 /**
- *
  * @author AlisonLeiva
  */
 public class Frame extends javax.swing.JFrame {
 
     public static String nombre_proyecto;
     LinkedList<Ruta> rutas = new LinkedList<>();
-    int i = 1;
+    int i = 1, contadorTab = 1;
     int contador = 0;
-    DefaultTableModel dtm = new DefaultTableModel();
-
     public Frame() {
         initComponents();
         txtEntrada.setLineWrap(true);
@@ -37,9 +34,7 @@ public class Frame extends javax.swing.JFrame {
         txtEntrada.setLineWrap(true);
         txtSalida.setWrapStyleWord(true);
         nombre_proyecto = "UFEprojects\\" + txtname.getText();
-        tablaSimbolos.setModel(dtm);
-        String[] titulos = new String[]{"No", "Tipo", "Descripcion", "Linea", "Columna"};
-        dtm.setColumnIdentifiers(titulos);
+
     }
 
     @SuppressWarnings("unchecked")
@@ -67,8 +62,6 @@ public class Frame extends javax.swing.JFrame {
         jTabbedPane1 = new javax.swing.JTabbedPane();
         jScrollPane2 = new javax.swing.JScrollPane();
         txtSalida = new javax.swing.JTextArea();
-        jScrollPane3 = new javax.swing.JScrollPane();
-        tablaSimbolos = new javax.swing.JTable();
         jMenuBar1 = new javax.swing.JMenuBar();
         Abrir = new javax.swing.JMenu();
         Guardar = new javax.swing.JMenu();
@@ -98,7 +91,7 @@ public class Frame extends javax.swing.JFrame {
         txtEntrada.setColumns(20);
         txtEntrada.setFont(new java.awt.Font("Century Gothic", 0, 48)); // NOI18N
         txtEntrada.setRows(5);
-        txtEntrada.setText("\t\t\n\t\t\n\t\t\n                  U S A C   F R O N T   E N D                  ");
+        txtEntrada.setText("\t\t\n\t\t\n\t\t\n         U S A C   F R O N T   E N D                  ");
         txtEntrada.setEnabled(false);
         jScrollPane1.setViewportView(txtEntrada);
 
@@ -106,11 +99,13 @@ public class Frame extends javax.swing.JFrame {
         panel.setLayout(panelLayout);
         panelLayout.setHorizontalGroup(
             panelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 1108, Short.MAX_VALUE)
+            .addGroup(panelLayout.createSequentialGroup()
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 756, Short.MAX_VALUE)
+                .addContainerGap())
         );
         panelLayout.setVerticalGroup(
             panelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jScrollPane1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 420, Short.MAX_VALUE)
+            .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 779, Short.MAX_VALUE)
         );
 
         TabbedPane.addTab("Nuevo", panel);
@@ -163,21 +158,6 @@ public class Frame extends javax.swing.JFrame {
 
         jTabbedPane1.addTab("Consola", jScrollPane2);
 
-        tablaSimbolos.setModel(new javax.swing.table.DefaultTableModel(
-            new Object [][] {
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null}
-            },
-            new String [] {
-                "Title 1", "Title 2", "Title 3", "Title 4"
-            }
-        ));
-        jScrollPane3.setViewportView(tablaSimbolos);
-
-        jTabbedPane1.addTab("Tabla Errores", jScrollPane3);
-
         Abrir.setText("Abrir");
         Abrir.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
@@ -220,52 +200,50 @@ public class Frame extends javax.swing.JFrame {
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
+                .addContainerGap()
                 .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 357, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(TabbedPane, javax.swing.GroupLayout.Alignment.TRAILING)
                     .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(layout.createSequentialGroup()
-                                .addGap(17, 17, 17)
-                                .addComponent(jLabel3))
-                            .addGroup(layout.createSequentialGroup()
-                                .addGap(8, 8, 8)
-                                .addComponent(jLabel4)))
-                        .addGap(18, 18, 18)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addGroup(layout.createSequentialGroup()
+                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                                 .addComponent(txtarchivo, javax.swing.GroupLayout.PREFERRED_SIZE, 132, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addComponent(CrearArchivo, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                            .addGroup(layout.createSequentialGroup()
-                                .addComponent(txtname, javax.swing.GroupLayout.PREFERRED_SIZE, 132, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addComponent(jButton1)))
-                        .addGap(0, 0, Short.MAX_VALUE))
-                    .addComponent(jTabbedPane1))
-                .addContainerGap())
+                                .addGroup(layout.createSequentialGroup()
+                                    .addComponent(jLabel4)
+                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                    .addComponent(txtname, javax.swing.GroupLayout.PREFERRED_SIZE, 132, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                            .addComponent(jLabel3))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jButton1)
+                            .addComponent(CrearArchivo, javax.swing.GroupLayout.PREFERRED_SIZE, 117, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(TabbedPane, javax.swing.GroupLayout.PREFERRED_SIZE, 773, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(jTabbedPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 508, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(32, 32, 32))))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+            .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addGroup(layout.createSequentialGroup()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(txtname, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jButton1)
-                            .addComponent(jLabel4))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(txtarchivo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jLabel3)
-                            .addComponent(CrearArchivo))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(TabbedPane, javax.swing.GroupLayout.PREFERRED_SIZE, 450, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(18, 18, 18)
-                        .addComponent(jTabbedPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 361, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(txtname, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel4)
+                    .addComponent(jButton1))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel3)
+                    .addComponent(txtarchivo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(CrearArchivo))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jTabbedPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 797, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(TabbedPane, javax.swing.GroupLayout.PREFERRED_SIZE, 809, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(26, 26, 26))
+            .addGroup(layout.createSequentialGroup()
+                .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addContainerGap())
         );
 
@@ -295,6 +273,71 @@ public class Frame extends javax.swing.JFrame {
     }//GEN-LAST:event_GuardarComoMouseClicked
 
     private void AnalizarMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_AnalizarMouseClicked
+ /*   double resultado = 0;
+    double x = 0;
+    int numeroIteraciones=100;
+    int factorial = 1;        
+    int i=0,j = 0;          
+    int contador = 8;  
+    String  mensajes[]= new String[10];
+    mensajes[0]= "e^x(";
+    mensajes[1]= "ln(1+";
+    mensajes[2]= "ln(";
+    mensajes[3]= "sin(";
+    mensajes[4]= "cos(";
+    mensajes[5]= "arctan(";
+    mensajes[6]= "sinh(";
+    mensajes[7]= "cosh("; 
+    double  parametros[]= new double[10];
+    parametros[0] = 5;
+    parametros[1] = 0.5;
+    parametros[2] = 1.5;
+    parametros[3] = 2;
+    parametros[4] = 2;
+    parametros[5] = 0.2;
+    parametros[6] = 0.2;
+    parametros[7] = 0.2;
+    parametros[8] = 2;
+    parametros[9] = 3;
+
+    while(contador>0)
+    {
+        if(contador == 1)
+        {
+            System.out.println("CONTADOR = 1"); 
+            /*  Calculo de e^x 
+              Primero calculamos el factorial*/
+/*
+            resultado = 0;  
+            x = parametros[contador ];    
+           
+
+            i = 0; 
+            while(i < numeroIteraciones)
+            {    
+                factorial = 1;
+                j=0;
+                while(j < i)
+                {
+                    factorial = factorial * (j+1);
+                    j++;
+                }  
+	        System.out.println("-----Resultado "+ resultado);
+                System.out.println(i +"! = " + factorial);
+                resultado = resultado +  Math.pow(x, i) / factorial;  
+                        System.out.println("Resultado EXACTO:" + factorial(i));
+
+              i++;
+            }     
+            System.out.println(contador +"--" + mensajes[contador-1]+x+") = " + resultado); 
+        }
+
+        contador--;
+    }                                   
+
+        */
+
+        
         CSS.CSS.estilos.clear();
         HTML.HTML.listaId.clear();
         Componente.listaComponentes.clear();
@@ -318,8 +361,7 @@ public class Frame extends javax.swing.JFrame {
             parserUFE sintactico = new parserUFE(lexico);
             sintactico.parse();
             raiz = sintactico.raiz;
-            graficar(raiz);
-
+           // graficar(raiz);
         } catch (Exception ex) {
             System.out.println("NO ENTRO UFE");
         }
@@ -327,15 +369,24 @@ public class Frame extends javax.swing.JFrame {
         global = segundo_rec.Ejecutar(raiz, global);
         tercer_rec.Ejecutar(raiz, global);
         txtSalida.setText(TercerRecorrido.ResultadoConsola);
+        TercerRecorrido.ResultadoConsola = "";
         if (!Reporte.ReporteErrores.isEmpty()) {
             GenerarReporteErrores(Reporte.ReporteErrores);
-            LlenarTablaErrores(Reporte.ReporteErrores);
             OpenFile("ReporteErrores.html");
             Reporte.ReporteErrores.clear();
         }
 
+
     }//GEN-LAST:event_AnalizarMouseClicked
 
+    
+        public  int factorial(int n) {
+        int resultado = 1;
+        for (int i = 1; i <= n; i++) {
+            resultado *= i;
+        }
+        return resultado;
+    }
     private void jButton1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jButton1MouseClicked
         nombre_proyecto = "UFEprojects\\" + txtname.getText();
         CrearCarpeta("UFEprojects");
@@ -436,41 +487,6 @@ public class Frame extends javax.swing.JFrame {
         }
     }
 
-    /* private void LLenarTablaSimbolos() {
-        int i = 0;
-        try {
-            // Tabla de html
-            Symbol simbolo;
-            analizadores.LexicoHTML lexicoHTML;
-            lexicoHTML = new analizadores.LexicoHTML(new FileInputStream("UFEprojects\\" + nombre_proyecto + "\\public\\index.html"));
-            simbolo = lexicoHTML.next_token();
-            do {
-                try {
-                    dtm.addRow(new Object[]{(i + 1), simbolo.value, simbolo.sym, simbolo.left, simbolo.right});
-                    simbolo = lexicoHTML.next_token();
-                    i++;
-                } catch (Exception e) {
-                    break;
-                }
-            } while (simbolo.value.toString() != null);
-            // Tabla de CSS
-            analizadores.LexicoUFE lexicoUFE;
-            lexicoUFE = new LexicoUFE(new BufferedReader(new StringReader(getJTextArea().getText())));
-            simbolo = lexicoUFE.next_token();
-            do {
-                try {
-                    dtm.addRow(new Object[]{(i + 1), simbolo.value, simbolo.sym, simbolo.left, simbolo.right});
-                    simbolo = lexicoUFE.next_token();
-                    i++;
-                } catch (Exception e) {
-                    break;
-                }
-            } while (simbolo.value.toString() != null);
-
-        } catch (Exception ex) {
-            System.out.println("Error fatal en la compilación");
-        }
-    }*/
     public void AbrirArchivo() {
         JFileChooser JFC = new JFileChooser();
         JFC.setFileFilter(new FileNameExtensionFilter("todos los archivos *.rep", "rep", "REP"));
@@ -503,14 +519,6 @@ public class Frame extends javax.swing.JFrame {
         }
     }
 
-    private void LlenarTablaErrores(LinkedList<Reporte> errores) {
-        dtm.setRowCount(0);
-        for (int i = 0; i < errores.size(); i++) {
-            dtm.addRow(new Object[]{(i + 1), errores.get(i).tipo, errores.get(i).error, errores.get(i).linea, errores.get(i).columna});
-        }
-
-    }
-
     private void AddTab(File archivo, String texto) {
         txtEntrada = new JTextArea();
         txtEntrada.setLineWrap(true);
@@ -520,8 +528,8 @@ public class Frame extends javax.swing.JFrame {
         TabbedPane.addTab(archivo.getName(), scroll);
         TabbedPane.setName(archivo.getName());
         txtEntrada.setText(texto);
-        rutas.add(new Ruta(archivo.getAbsolutePath(), (TabbedPane.getSelectedIndex() + i)));
-        i++;
+        rutas.add(new Ruta(archivo.getAbsolutePath(), (TabbedPane.getSelectedIndex() + contadorTab)));
+        contadorTab++;
     }
 
     public File GuardarArchivo(String ruta) throws IOException {
@@ -672,11 +680,9 @@ public class Frame extends javax.swing.JFrame {
     private javax.swing.JMenuBar jMenuBar3;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
-    private javax.swing.JScrollPane jScrollPane3;
     private javax.swing.JSpinner jSpinner1;
     private javax.swing.JTabbedPane jTabbedPane1;
     private javax.swing.JPanel panel;
-    private javax.swing.JTable tablaSimbolos;
     private javax.swing.JTextArea txtEntrada;
     private javax.swing.JTextArea txtSalida;
     private javax.swing.JTextField txtarchivo;

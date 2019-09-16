@@ -14,7 +14,6 @@ public class EjecutarOperacion {
     }
 
     private static Expresion resolver(Nodo raiz, Entorno ent) {
-
         switch (raiz.estado) {
             case "INT": {
                 return new Expresion(Simbolo.EnumTipo.INT, raiz.valor);
@@ -60,7 +59,10 @@ public class EjecutarOperacion {
             case "OPERACION": {
                 Expresion valor1 = resolverExpresion(raiz.hijos.get(0), ent);
                 Expresion valor2 = resolverExpresion(raiz.hijos.get(2), ent);
-
+                /* System.out.println("--------------------" + raiz.hijos.get(1).estado + "-------------------------------");
+                System.out.println("valor 1 " + valor1.tipo + " " + valor1.valor);
+                System.out.println("valor 2" + valor2.tipo + " " + valor2.valor);
+                */
                 if (valor1.tipo.equals(Simbolo.EnumTipo.STRING)) {
                     valor1.valor = valor1.valor.toString().toLowerCase();
                 }
@@ -93,23 +95,26 @@ public class EjecutarOperacion {
                     if (valor1.tipo.equals(Simbolo.EnumTipo.BOOLEAN) && valor2.tipo.equals(Simbolo.EnumTipo.BOOLEAN)) {
                         return EjecutarXOR(valor1.valor.toString(), valor2.valor.toString());
                     }
+                    Reporte.agregarReporte(new Reporte("Semantico", "El operador '^' no se puede  aplicar a operandos de tipo " + valor1.tipo + "-" + valor2.tipo, raiz.linea, raiz.columna));
                 } else if (raiz.hijos.get(1).estado.equals("&&")) {
                     if (valor1.tipo.equals(Simbolo.EnumTipo.BOOLEAN) && valor2.tipo.equals(Simbolo.EnumTipo.BOOLEAN)) {
                         return EjecutarAND(valor1.valor.toString(), valor2.valor.toString());
                     }
+                    Reporte.agregarReporte(new Reporte("Semantico", "El operador '&&' no se puede  aplicar a operandos de tipo " + valor1.tipo + "-" + valor2.tipo, raiz.linea, raiz.columna));
+
                 } else if (raiz.hijos.get(1).estado.equals("||")) {
                     if (valor1.tipo.equals(Simbolo.EnumTipo.BOOLEAN) && valor2.tipo.equals(Simbolo.EnumTipo.BOOLEAN)) {
                         return EjecutarOR(valor1.valor.toString(), valor2.valor.toString());
                     }
+                    Reporte.agregarReporte(new Reporte("Semantico", "El operador '||' no se puede  aplicar a operandos de tipo " + valor1.tipo + "-" + valor2.tipo, raiz.linea, raiz.columna));
                 } else if (raiz.hijos.get(1).estado.equals("!")) {
                     if (valor2.tipo.equals(Simbolo.EnumTipo.BOOLEAN)) {
                         return EjecutarNegacion(valor2.valor.toString());
                     }
+                    Reporte.agregarReporte(new Reporte("Semantico", "El operador '!' no se puede  aplicar a operandos de tipo " + valor2.tipo, raiz.linea, raiz.columna));
                 }
             }
-
         }
-
         return new Expresion(Simbolo.EnumTipo.ERROR, "@Error@");
     }
 
@@ -132,9 +137,6 @@ public class EjecutarOperacion {
                         int result = Integer.parseInt(valor1.valor.toString()) + (int) valor2.valor.toString().charAt(0);
                         return new Expresion(Simbolo.EnumTipo.INT, String.valueOf(result));
                     }
-                    default: {
-                        Reporte.agregarReporte(new Reporte("Semantico", "El operador '+' no se puede  aplicar a operandos de tipo INT-" + valor2.tipo, raiz.linea, raiz.columna));
-                    }
                 }
             }
             case DOUBLE: {
@@ -154,13 +156,9 @@ public class EjecutarOperacion {
                         double result = Double.parseDouble(valor1.valor.toString()) + (double) (int) valor2.valor.toString().charAt(0);
                         return new Expresion(Simbolo.EnumTipo.DOUBLE, String.valueOf(result));
                     }
-                    default: {
-                        Reporte.agregarReporte(new Reporte("Semantico", "El operador '+' no se puede  aplicar a operandos de tipo INT-" + valor2.tipo, raiz.linea, raiz.columna));
-                    }
                 }
             }
             case STRING: {
-
                 switch (valor2.tipo) {
                     case INT: {
                         return new Expresion(Simbolo.EnumTipo.STRING, valor1.valor.toString() + valor2.valor.toString());
@@ -176,9 +174,6 @@ public class EjecutarOperacion {
                     }
                     case BOOLEAN: {
                         return new Expresion(Simbolo.EnumTipo.STRING, valor1.valor.toString() + valor2.valor.toString());
-                    }
-                    default: {
-                        Reporte.agregarReporte(new Reporte("Semantico", "El operador '+' no se puede  aplicar a operandos de tipo STRING-" + valor2.tipo, raiz.linea, raiz.columna));
                     }
                 }
             }
@@ -199,9 +194,6 @@ public class EjecutarOperacion {
                     case STRING: {
                         return new Expresion(Simbolo.EnumTipo.STRING, valor1.valor.toString() + valor2.valor.toString());
                     }
-                    default: {
-                        Reporte.agregarReporte(new Reporte("Semantico", "El operador '+' no se puede  aplicar a operandos de tipo CHAR-" + valor2.tipo, raiz.linea, raiz.columna));
-                    }
                 }
             }
             case BOOLEAN: {
@@ -209,12 +201,10 @@ public class EjecutarOperacion {
                     case STRING: {
                         return new Expresion(Simbolo.EnumTipo.STRING, valor1.valor.toString() + valor2.valor.toString());
                     }
-                    default: {
-                        Reporte.agregarReporte(new Reporte("Semantico", "El operador '+' no se puede  aplicar a operandos de tipo BOOLEAN-" + valor2.tipo, raiz.linea, raiz.columna));
-                    }
                 }
             }
         }
+        Reporte.agregarReporte(new Reporte("Semantico", "El operador '+' no se puede  aplicar a operandos de tipo " + valor1.tipo + "-" + valor2.tipo, raiz.linea, raiz.columna));
         return new Expresion(Simbolo.EnumTipo.ERROR, "@Error@");
     }
 
@@ -234,9 +224,6 @@ public class EjecutarOperacion {
                         int result = Integer.parseInt(valor1.valor.toString()) - (int) valor2.valor.toString().charAt(0);
                         return new Expresion(Simbolo.EnumTipo.INT, String.valueOf(result));
                     }
-                    default: {
-                        Reporte.agregarReporte(new Reporte("Semantico", "El operador '-' no se puede  aplicar a operandos de tipo INT-" + valor2.tipo, raiz.linea, raiz.columna));
-                    }
                 }
             }
             case DOUBLE: {
@@ -252,9 +239,6 @@ public class EjecutarOperacion {
                     case CHAR: {
                         double result = Double.parseDouble(valor1.valor.toString()) - (double) (int) valor2.valor.toString().charAt(0);
                         return new Expresion(Simbolo.EnumTipo.DOUBLE, String.valueOf(result));
-                    }
-                    default: {
-                        Reporte.agregarReporte(new Reporte("Semantico", "El operador '-' no se puede  aplicar a operandos de tipo INT-" + valor2.tipo, raiz.linea, raiz.columna));
                     }
                 }
             }
@@ -272,16 +256,10 @@ public class EjecutarOperacion {
                         double result = (double) (int) valor1.valor.toString().charAt(0) - Double.parseDouble(valor2.valor.toString());
                         return new Expresion(Simbolo.EnumTipo.DOUBLE, String.valueOf(result));
                     }
-                    default: {
-                        Reporte.agregarReporte(new Reporte("Semantico", "El operador '-' no se puede  aplicar a operandos de tipo CHAR-" + valor2.tipo, raiz.linea, raiz.columna));
-                    }
                 }
             }
-
-            default: {
-                Reporte.agregarReporte(new Reporte("Semantico", "El operador '-' no se puede  aplicar a operandos de tipo " + valor1.valor, raiz.linea, raiz.columna));
-            }
         }
+        Reporte.agregarReporte(new Reporte("Semantico", "El operador '-' no se puede  aplicar a operandos de tipo " + valor1.tipo + "-" + valor2.tipo, raiz.linea, raiz.columna));
         return new Expresion(Simbolo.EnumTipo.ERROR, "@Error@");
     }
 
@@ -301,9 +279,6 @@ public class EjecutarOperacion {
                         int result = Integer.parseInt(valor1.valor.toString()) * (int) valor2.valor.toString().charAt(0);
                         return new Expresion(Simbolo.EnumTipo.INT, String.valueOf(result));
                     }
-                    default: {
-                        Reporte.agregarReporte(new Reporte("Semantico", "El operador '*' no se puede  aplicar a operandos de tipo INT-" + valor2.tipo, raiz.linea, raiz.columna));
-                    }
                 }
             }
             case DOUBLE: {
@@ -319,9 +294,6 @@ public class EjecutarOperacion {
                     case CHAR: {
                         double result = Double.parseDouble(valor1.valor.toString()) * (double) (int) valor2.valor.toString().charAt(0);
                         return new Expresion(Simbolo.EnumTipo.DOUBLE, String.valueOf(result));
-                    }
-                    default: {
-                        Reporte.agregarReporte(new Reporte("Semantico", "El operador '*' no se puede  aplicar a operandos de tipo INT-" + valor2.tipo, raiz.linea, raiz.columna));
                     }
                 }
             }
@@ -339,19 +311,18 @@ public class EjecutarOperacion {
                         double result = (double) (int) valor1.valor.toString().charAt(0) * Double.parseDouble(valor2.valor.toString());
                         return new Expresion(Simbolo.EnumTipo.DOUBLE, String.valueOf(result));
                     }
-                    default: {
-                        Reporte.agregarReporte(new Reporte("Semantico", "El operador '*' no se puede  aplicar a operandos de tipo CHAR-" + valor2.tipo, raiz.linea, raiz.columna));
-                    }
                 }
             }
-            default: {
-                Reporte.agregarReporte(new Reporte("Semantico", "El operador '*' no se puede  aplicar a operandos de tipo " + valor1.valor, raiz.linea, raiz.columna));
-            }
         }
+        Reporte.agregarReporte(new Reporte("Semantico", "El operador '*' no se puede  aplicar a operandos de tipo " + valor1.tipo + "-" + valor2.tipo, raiz.linea, raiz.columna));
         return new Expresion(Simbolo.EnumTipo.ERROR, "@Error@");
     }
 
     private static Expresion EjecutarDivision(Nodo raiz, Expresion valor1, Expresion valor2) {
+        if (valor2.valor.equals("0")) {
+            Reporte.agregarReporte(new Reporte("Semantico", "No se puede dividir entre '0'", raiz.linea, raiz.columna));
+            return new Expresion(Simbolo.EnumTipo.ERROR, "@Error@");
+        }
         switch (valor1.tipo) {
             case INT: {
                 switch (valor2.tipo) {
@@ -367,9 +338,6 @@ public class EjecutarOperacion {
                     case CHAR: {
                         double result = Double.parseDouble(valor1.valor.toString()) / (double) (int) valor2.valor.toString().charAt(0);
                         return new Expresion(Simbolo.EnumTipo.INT, String.valueOf(result));
-                    }
-                    default: {
-                        Reporte.agregarReporte(new Reporte("Semantico", "El operador '/' no se puede  aplicar a operandos de tipo INT-" + valor2.tipo, raiz.linea, raiz.columna));
                     }
                 }
             }
@@ -387,9 +355,6 @@ public class EjecutarOperacion {
                         double result = Double.parseDouble(valor1.valor.toString()) / (double) (int) valor2.valor.toString().charAt(0);
                         return new Expresion(Simbolo.EnumTipo.DOUBLE, String.valueOf(result));
                     }
-                    default: {
-                        Reporte.agregarReporte(new Reporte("Semantico", "El operador '/' no se puede  aplicar a operandos de tipo INT-" + valor2.tipo, raiz.linea, raiz.columna));
-                    }
                 }
             }
             case CHAR: {
@@ -406,15 +371,10 @@ public class EjecutarOperacion {
                         double result = (double) (int) valor1.valor.toString().charAt(0) / Double.parseDouble(valor2.valor.toString());
                         return new Expresion(Simbolo.EnumTipo.DOUBLE, String.valueOf(result));
                     }
-                    default: {
-                        Reporte.agregarReporte(new Reporte("Semantico", "El operador '/' no se puede  aplicar a operandos de tipo CHAR-" + valor2.tipo, raiz.linea, raiz.columna));
-                    }
                 }
             }
-            default: {
-                Reporte.agregarReporte(new Reporte("Semantico", "El operador '/' no se puede  aplicar a operandos de tipo " + valor1.valor, raiz.linea, raiz.columna));
-            }
         }
+        Reporte.agregarReporte(new Reporte("Semantico", "El operador '/' no se puede  aplicar a operandos de tipo " + valor1.tipo + "-" + valor2.tipo, raiz.linea, raiz.columna));
         return new Expresion(Simbolo.EnumTipo.ERROR, "@Error@");
     }
 
@@ -434,9 +394,6 @@ public class EjecutarOperacion {
                         double result = Math.pow(Double.parseDouble(valor1.valor.toString()), (double) (int) valor2.valor.toString().charAt(0));
                         return new Expresion(Simbolo.EnumTipo.DOUBLE, String.valueOf(result));
                     }
-                    default: {
-                        Reporte.agregarReporte(new Reporte("Semantico", "El operador 'pow' no se puede  aplicar a operandos de tipo INT-" + valor2.tipo, raiz.linea, raiz.columna));
-                    }
                 }
             }
             case DOUBLE: {
@@ -452,9 +409,6 @@ public class EjecutarOperacion {
                     case CHAR: {
                         double result = Math.pow(Double.parseDouble(valor1.valor.toString()), (double) (int) valor2.valor.toString().charAt(0));
                         return new Expresion(Simbolo.EnumTipo.DOUBLE, String.valueOf(result));
-                    }
-                    default: {
-                        Reporte.agregarReporte(new Reporte("Semantico", "El operador 'pow' no se puede  aplicar a operandos de tipo INT-" + valor2.tipo, raiz.linea, raiz.columna));
                     }
                 }
             }
@@ -472,15 +426,10 @@ public class EjecutarOperacion {
                         double result = Math.pow((double) (int) valor1.valor.toString().charAt(0), Double.parseDouble(valor2.valor.toString()));
                         return new Expresion(Simbolo.EnumTipo.DOUBLE, String.valueOf(result));
                     }
-                    default: {
-                        Reporte.agregarReporte(new Reporte("Semantico", "El operador 'pow' no se puede  aplicar a operandos de tipo CHAR-" + valor2.tipo, raiz.linea, raiz.columna));
-                    }
                 }
             }
-            default: {
-                Reporte.agregarReporte(new Reporte("Semantico", "El operador 'pow' no se puede  aplicar a operandos de tipo " + valor1.valor, raiz.linea, raiz.columna));
-            }
         }
+        Reporte.agregarReporte(new Reporte("Semantico", "El operador 'pow' no se puede  aplicar a operandos de tipo " + valor1.tipo + "-" + valor2.tipo, raiz.linea, raiz.columna));
         return new Expresion(Simbolo.EnumTipo.ERROR, "@Error@");
     }
 

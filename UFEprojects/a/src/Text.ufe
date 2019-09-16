@@ -1,7 +1,0 @@
-import "./app.css";
-import Boton1 from "./elementosFomr1.ufe";
-import Sppiner1 from "./elementosFomr1.ufe";
-import tituloF from "./elementosFomr1.ufe";
-/* Importación desde otro archivo */
-import Boton2 from "./componentes/utilidades.ufe";
-import BotonAlerta from "./componentes/utilidades.ufe";

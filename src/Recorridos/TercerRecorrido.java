@@ -33,8 +33,6 @@ public class TercerRecorrido {
     int posicion = 0;
 
     public void Ejecutar(Nodo raiz, Entorno global) {
-        /* System.out.println("--------------------------------------------VARIABLES DECLARADAS-- tercer recorrido-------------------------------------------------------");
-        global.imprimir();*/
         recorrer(raiz, global, null);
         System.out.println("--------------------------------------------VARIABLES DECLARADAS-- tercer recorrido-------------------------------------------------------");
         global.imprimir();
@@ -177,7 +175,7 @@ public class TercerRecorrido {
         while (Boolean.valueOf(condicion.valor.toString())) {
             Entorno local = new Entorno(ent);
             recorrer(raiz.hijos.get(1), local, componente);
-            JOptionPane.showMessageDialog(null, "CICLO MIENTRAS ");
+          //  JOptionPane.showMessageDialog(null, "CICLO MIENTRAS ");
             condicion = EjecutarOperacion.resolverExpresion(raiz.hijos.get(0), local);
         }
     }
@@ -275,7 +273,7 @@ public class TercerRecorrido {
     public void Atributos(Nodo raiz, AtributoUFE a, Entorno ent) {
         for (int i = 0; i < raiz.hijos.size(); i++) {
 
-            String estado = raiz.hijos.get(i).hijos.get(0).valor;
+            String estado = raiz.hijos.get(i).hijos.get(0).valor;            
             Expresion valor = EjecutarOperacion.resolverExpresion(raiz.hijos.get(i).hijos.get(1), ent);
 
             if (!valor.tipo.equals(Simbolo.EnumTipo.ERROR)) {

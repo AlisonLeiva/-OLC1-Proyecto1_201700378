@@ -13,6 +13,8 @@ public class LexicoHTML implements java_cup.runtime.Scanner {
 	private final int YY_NO_ANCHOR = 4;
 	private final int YY_BOL = 65536;
 	private final int YY_EOF = 65537;
+
+String texto ="";
 	private java.io.BufferedReader yy_reader;
 	private int yy_buffer_index;
 	private int yy_buffer_read;
@@ -58,13 +60,21 @@ public class LexicoHTML implements java_cup.runtime.Scanner {
 	private boolean yy_eof_done = false;
 	private final int TEXTOETIQUETA = 1;
 	private final int COMENTARIO_T = 3;
+	private final int S3 = 7;
 	private final int YYINITIAL = 0;
+	private final int S2 = 6;
 	private final int COMENTARIO = 2;
+	private final int COMENTARIO_S3 = 4;
+	private final int COMENTARIO_S2 = 5;
 	private final int yy_state_dtrans[] = {
 		0,
-		18,
-		21,
-		23
+		95,
+		98,
+		100,
+		102,
+		104,
+		106,
+		109
 	};
 	private void yybegin (int state) {
 		yy_lexical_state = state;
@@ -242,68 +252,135 @@ public class LexicoHTML implements java_cup.runtime.Scanner {
 		/* 22 */ YY_NO_ANCHOR,
 		/* 23 */ YY_NO_ANCHOR,
 		/* 24 */ YY_NO_ANCHOR,
-		/* 25 */ YY_NOT_ACCEPT,
+		/* 25 */ YY_NO_ANCHOR,
 		/* 26 */ YY_NO_ANCHOR,
 		/* 27 */ YY_NO_ANCHOR,
 		/* 28 */ YY_NO_ANCHOR,
 		/* 29 */ YY_NO_ANCHOR,
 		/* 30 */ YY_NO_ANCHOR,
 		/* 31 */ YY_NO_ANCHOR,
-		/* 32 */ YY_NOT_ACCEPT,
+		/* 32 */ YY_NO_ANCHOR,
 		/* 33 */ YY_NO_ANCHOR,
 		/* 34 */ YY_NO_ANCHOR,
-		/* 35 */ YY_NOT_ACCEPT,
+		/* 35 */ YY_NO_ANCHOR,
 		/* 36 */ YY_NO_ANCHOR,
-		/* 37 */ YY_NOT_ACCEPT,
+		/* 37 */ YY_NO_ANCHOR,
 		/* 38 */ YY_NO_ANCHOR,
-		/* 39 */ YY_NOT_ACCEPT,
+		/* 39 */ YY_NO_ANCHOR,
 		/* 40 */ YY_NO_ANCHOR,
-		/* 41 */ YY_NOT_ACCEPT,
+		/* 41 */ YY_NO_ANCHOR,
 		/* 42 */ YY_NO_ANCHOR,
-		/* 43 */ YY_NOT_ACCEPT,
+		/* 43 */ YY_NO_ANCHOR,
 		/* 44 */ YY_NO_ANCHOR,
-		/* 45 */ YY_NOT_ACCEPT,
+		/* 45 */ YY_NO_ANCHOR,
 		/* 46 */ YY_NO_ANCHOR,
-		/* 47 */ YY_NOT_ACCEPT,
-		/* 48 */ YY_NOT_ACCEPT,
+		/* 47 */ YY_NO_ANCHOR,
+		/* 48 */ YY_NO_ANCHOR,
 		/* 49 */ YY_NOT_ACCEPT,
-		/* 50 */ YY_NOT_ACCEPT,
-		/* 51 */ YY_NOT_ACCEPT,
-		/* 52 */ YY_NOT_ACCEPT,
-		/* 53 */ YY_NOT_ACCEPT,
-		/* 54 */ YY_NOT_ACCEPT,
-		/* 55 */ YY_NOT_ACCEPT,
-		/* 56 */ YY_NOT_ACCEPT,
-		/* 57 */ YY_NOT_ACCEPT,
-		/* 58 */ YY_NOT_ACCEPT,
-		/* 59 */ YY_NOT_ACCEPT,
-		/* 60 */ YY_NOT_ACCEPT,
+		/* 50 */ YY_NO_ANCHOR,
+		/* 51 */ YY_NO_ANCHOR,
+		/* 52 */ YY_NO_ANCHOR,
+		/* 53 */ YY_NO_ANCHOR,
+		/* 54 */ YY_NO_ANCHOR,
+		/* 55 */ YY_NO_ANCHOR,
+		/* 56 */ YY_NO_ANCHOR,
+		/* 57 */ YY_NO_ANCHOR,
+		/* 58 */ YY_NO_ANCHOR,
+		/* 59 */ YY_NO_ANCHOR,
+		/* 60 */ YY_NO_ANCHOR,
 		/* 61 */ YY_NO_ANCHOR,
-		/* 62 */ YY_NOT_ACCEPT,
-		/* 63 */ YY_NOT_ACCEPT,
-		/* 64 */ YY_NO_ANCHOR,
+		/* 62 */ YY_NO_ANCHOR,
+		/* 63 */ YY_NO_ANCHOR,
+		/* 64 */ YY_NOT_ACCEPT,
 		/* 65 */ YY_NO_ANCHOR,
-		/* 66 */ YY_NOT_ACCEPT
+		/* 66 */ YY_NO_ANCHOR,
+		/* 67 */ YY_NO_ANCHOR,
+		/* 68 */ YY_NO_ANCHOR,
+		/* 69 */ YY_NO_ANCHOR,
+		/* 70 */ YY_NO_ANCHOR,
+		/* 71 */ YY_NO_ANCHOR,
+		/* 72 */ YY_NO_ANCHOR,
+		/* 73 */ YY_NO_ANCHOR,
+		/* 74 */ YY_NOT_ACCEPT,
+		/* 75 */ YY_NO_ANCHOR,
+		/* 76 */ YY_NOT_ACCEPT,
+		/* 77 */ YY_NO_ANCHOR,
+		/* 78 */ YY_NOT_ACCEPT,
+		/* 79 */ YY_NO_ANCHOR,
+		/* 80 */ YY_NOT_ACCEPT,
+		/* 81 */ YY_NO_ANCHOR,
+		/* 82 */ YY_NOT_ACCEPT,
+		/* 83 */ YY_NO_ANCHOR,
+		/* 84 */ YY_NOT_ACCEPT,
+		/* 85 */ YY_NOT_ACCEPT,
+		/* 86 */ YY_NOT_ACCEPT,
+		/* 87 */ YY_NOT_ACCEPT,
+		/* 88 */ YY_NOT_ACCEPT,
+		/* 89 */ YY_NOT_ACCEPT,
+		/* 90 */ YY_NOT_ACCEPT,
+		/* 91 */ YY_NOT_ACCEPT,
+		/* 92 */ YY_NOT_ACCEPT,
+		/* 93 */ YY_NOT_ACCEPT,
+		/* 94 */ YY_NOT_ACCEPT,
+		/* 95 */ YY_NOT_ACCEPT,
+		/* 96 */ YY_NOT_ACCEPT,
+		/* 97 */ YY_NOT_ACCEPT,
+		/* 98 */ YY_NOT_ACCEPT,
+		/* 99 */ YY_NOT_ACCEPT,
+		/* 100 */ YY_NOT_ACCEPT,
+		/* 101 */ YY_NOT_ACCEPT,
+		/* 102 */ YY_NOT_ACCEPT,
+		/* 103 */ YY_NOT_ACCEPT,
+		/* 104 */ YY_NOT_ACCEPT,
+		/* 105 */ YY_NOT_ACCEPT,
+		/* 106 */ YY_NOT_ACCEPT,
+		/* 107 */ YY_NOT_ACCEPT,
+		/* 108 */ YY_NOT_ACCEPT,
+		/* 109 */ YY_NOT_ACCEPT,
+		/* 110 */ YY_NOT_ACCEPT,
+		/* 111 */ YY_NOT_ACCEPT,
+		/* 112 */ YY_NO_ANCHOR,
+		/* 113 */ YY_NO_ANCHOR,
+		/* 114 */ YY_NO_ANCHOR,
+		/* 115 */ YY_NO_ANCHOR,
+		/* 116 */ YY_NO_ANCHOR,
+		/* 117 */ YY_NO_ANCHOR,
+		/* 118 */ YY_NO_ANCHOR,
+		/* 119 */ YY_NO_ANCHOR,
+		/* 120 */ YY_NOT_ACCEPT,
+		/* 121 */ YY_NOT_ACCEPT,
+		/* 122 */ YY_NO_ANCHOR,
+		/* 123 */ YY_NOT_ACCEPT
 	};
 	private int yy_cmap[] = unpackFromString(1,65538,
-"22:9,25,23,22,26,24,22:18,27,20,28,22:10,21,22,2,22:12,4,3,1,22:2,10,12,22," +
-"11,9,18,22,5,15,22:2,8,7,16,13,22:4,6,17,19,22:2,14,22:2,29,22:4,10,12,22,1" +
-"1,9,18,22,5,15,22:2,8,7,16,13,22:4,6,17,19,22:2,14,22:65414,0:2")[0];
+"27:9,24,22,27,25,23,27:18,26,20,28,27:10,21,27,2,27:12,4,3,1,27:2,10,12,27," +
+"11,9,18,27,5,15,27:2,8,7,16,13,27:4,6,17,19,27:2,14,27:2,29,27:4,10,12,27,1" +
+"1,9,18,27,5,15,27:2,8,7,16,13,27:4,6,17,19,27:2,14,27:65414,0:2")[0];
 
-	private int yy_rmap[] = unpackFromString(1,67,
-"0,1:4,2,1,3,1:10,4,5,1,6,1,7,1,8,9,10,11,12,13,14,15,16,1,17,1,18,19,20,21," +
-"22,23,24,11:2,25,26,27,28,29,30,31,32,33,34,35,36,37,38,39,40,41,42,43,44,4" +
-"5")[0];
+	private int yy_rmap[] = unpackFromString(1,124,
+"0,1:4,2,1,3,1:11,4,1,5,1:3,6,1:3,7,1:3,8,1:3,9,1:2,10,1,11,1:2,12,1,13,1,14" +
+",15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,1:8,31,1,32,33,34,35,36,37" +
+",38,17:2,39,40,41,42,43,44,45,46,47,48,49,50,51,52,53,54,55,56,57,58,59,60," +
+"61,62,63,64,65,66,67,68,69,70,71,72,73,74,75,76,77")[0];
 
-	private int yy_nxt[][] = unpackFromString(46,30,
-"1,2,3,4,5,26,33,36:4,38,40,36:2,42,64,36:6,6,7,61,36,61,44,36,-1:35,25,-1:1" +
-"4,32,-1:33,61,27,-1,61,-1:2,1,29:3,19,29:25,-1:20,57,-1:9,1,36,30:19,46,30:" +
-"8,1,36,31:19,65,31:8,-1:6,63,-1:29,35,-1:2,37,-1:44,61:2,34,61,-1:3,45:22,-" +
-"1,45:4,9,47,-1,29:3,-1,29:25,-1:2,30:19,-1,30:8,-1:2,31:19,-1,31:8,-1:21,48" +
-",-1:23,62,-1:21,49,-1:32,50,-1:34,39,-1:33,10,-1:23,41,-1:27,51,-1:29,8,-1:" +
-"35,52,-1:33,59,-1:9,45:22,-1,45:4,28,47,-1:21,11,-1:16,54,-1:32,12,-1:32,13" +
-",-1:33,56,-1:19,14,-1:22,15,-1:37,16,-1:29,17,-1:41,58,-1:29,20,-1:9,22,-1:" +
-"29,24,-1:52,61:2,-1,61,-1:8,66,-1:30,53,-1:35,43,-1:37,60,-1:16,55,-1:21");
+	private int yy_nxt[][] = unpackFromString(78,30,
+"1,2,3,4,5,50,65,75:4,77,79,75:2,81,122,75:5,6,7,112,75,112,75,83,75,-1:35,4" +
+"9,-1:14,64,-1:32,112,51,-1,112,-1:23,96,-1:32,113,53,-1,113,-1:26,114,55,-1" +
+",114,-1:26,115,57,-1,115,-1:26,116,59,-1,116,-1:26,117,61,-1,117,-1:23,107," +
+"-1:32,118,62,-1,118,-1:23,110,-1:32,119,63,-1,119,-1:9,121,-1:29,74,-1:2,76" +
+",-1:43,112:2,66,112,-1:4,84:21,-1,84:5,9,85,-1:23,113:2,67,113,-1:24,99,-1:" +
+"31,114:2,68,114,-1:24,101,-1:31,115:2,69,115,-1:24,103,-1:31,116:2,70,116,-" +
+"1:24,105,-1:31,117:2,71,117,-1:26,118:2,72,118,-1:26,119:2,73,119,-1:24,86," +
+"-1:23,120,-1:21,87,-1:32,88,-1:34,78,-1:33,10,-1:23,80,-1:27,89,-1:29,8,-1:" +
+"35,90,-1:13,84:21,-1,84:5,52,85,-1:21,11,-1:16,92,-1:32,12,-1:32,13,-1:33,9" +
+"4,-1:19,14,-1:22,15,-1:37,16,-1:29,17,-1:20,1,18:3,19,18:17,20,21,113,18,11" +
+"3,18:3,-1:21,97,-1:29,22,-1:8,1,23:20,54,24,25,114,23,114,23:3,-1,26,-1:28," +
+"1,27:20,56,28,29,115,27,115,27:3,-1,30,-1:28,1,31:20,58,32,33,116,31,116,31" +
+":3,-1,34,-1:28,1,35:20,60,36,37,117,35,117,35:3,-1,38,-1:28,1,39:3,40,39:17" +
+",41,42,118,39,118,39:3,-1:21,108,-1:29,43,-1:8,1,44:3,45,44:17,46,47,119,44" +
+",119,44:3,-1:21,111,-1:29,48,-1:31,112:2,-1,112,-1:26,113:2,-1,113,-1:26,11" +
+"4:2,-1,114,-1:26,115:2,-1,115,-1:26,116:2,-1,116,-1:26,117:2,-1,117,-1:26,1" +
+"18:2,-1,118,-1:26,119:2,-1,119,-1:9,123,-1:30,91,-1:35,82,-1:24,93,-1:21");
 
 	public java_cup.runtime.Symbol next_token ()
 		throws java.io.IOException {
@@ -354,7 +431,7 @@ public class LexicoHTML implements java_cup.runtime.Scanner {
 					case -2:
 						break;
 					case 2:
-						{yybegin(TEXTOETIQUETA); return new Symbol(sym1.mayor,yyline,yychar, yytext().trim().toLowerCase());}
+						{texto ="";yybegin(TEXTOETIQUETA); return new Symbol(sym1.mayor,yyline,yychar, yytext().trim().toLowerCase());}
 					case -3:
 						break;
 					case 3:
@@ -420,15 +497,15 @@ public class LexicoHTML implements java_cup.runtime.Scanner {
 					case -18:
 						break;
 					case 18:
-						{return new Symbol(sym1.txtetiqueta,yyline,yychar, yytext().trim().toLowerCase()); }
+						{texto += yytext();  yybegin(S2);}
 					case -19:
 						break;
 					case 19:
-						{yybegin(YYINITIAL);}
+						{yybegin(YYINITIAL); return new Symbol(sym1.txtetiqueta,yyline,yychar,yytext());}
 					case -20:
 						break;
 					case 20:
-						{yybegin(COMENTARIO_T);}
+						{yychar=1;}
 					case -21:
 						break;
 					case 21:
@@ -436,7 +513,7 @@ public class LexicoHTML implements java_cup.runtime.Scanner {
 					case -22:
 						break;
 					case 22:
-						{yybegin(YYINITIAL);}
+						{yybegin(COMENTARIO_T);}
 					case -23:
 						break;
 					case 23:
@@ -444,96 +521,268 @@ public class LexicoHTML implements java_cup.runtime.Scanner {
 					case -24:
 						break;
 					case 24:
-						{yybegin(TEXTOETIQUETA);}
+						{yychar=1;}
 					case -25:
 						break;
-					case 26:
-						{
-            Reporte.agregarReporte(new Reporte("Lexico", "[HTML] caracter malo: "+yytext().trim().toLowerCase(),yyline,yychar));
-}
+					case 25:
+						{}
 					case -26:
+						break;
+					case 26:
+						{yybegin(YYINITIAL);}
+					case -27:
 						break;
 					case 27:
 						{}
-					case -27:
-						break;
-					case 28:
-						{return new Symbol(sym1.cadena,yyline,yychar, yytext().trim());}
 					case -28:
 						break;
-					case 29:
-						{return new Symbol(sym1.txtetiqueta,yyline,yychar, yytext().trim().toLowerCase()); }
+					case 28:
+						{yychar=1;}
 					case -29:
 						break;
-					case 30:
+					case 29:
 						{}
 					case -30:
 						break;
-					case 31:
-						{}
+					case 30:
+						{yybegin(TEXTOETIQUETA);}
 					case -31:
 						break;
-					case 33:
-						{
-            Reporte.agregarReporte(new Reporte("Lexico", "[HTML] caracter malo: "+yytext().trim().toLowerCase(),yyline,yychar));
-}
+					case 31:
+						{}
 					case -32:
 						break;
-					case 34:
-						{}
+					case 32:
+						{yychar=1;}
 					case -33:
 						break;
-					case 36:
-						{
-            Reporte.agregarReporte(new Reporte("Lexico", "[HTML] caracter malo: "+yytext().trim().toLowerCase(),yyline,yychar));
-}
+					case 33:
+						{}
 					case -34:
 						break;
-					case 38:
-						{
-            Reporte.agregarReporte(new Reporte("Lexico", "[HTML] caracter malo: "+yytext().trim().toLowerCase(),yyline,yychar));
-}
+					case 34:
+						{yybegin(S3);}
 					case -35:
 						break;
-					case 40:
-						{
-            Reporte.agregarReporte(new Reporte("Lexico", "[HTML] caracter malo: "+yytext().trim().toLowerCase(),yyline,yychar));
-}
+					case 35:
+						{}
 					case -36:
 						break;
-					case 42:
-						{
-            Reporte.agregarReporte(new Reporte("Lexico", "[HTML] caracter malo: "+yytext().trim().toLowerCase(),yyline,yychar));
-}
+					case 36:
+						{yychar=1;}
 					case -37:
 						break;
-					case 44:
-						{
-            Reporte.agregarReporte(new Reporte("Lexico", "[HTML] caracter malo: "+yytext().trim().toLowerCase(),yyline,yychar));
-}
+					case 37:
+						{}
 					case -38:
 						break;
+					case 38:
+						{yybegin(S2);}
+					case -39:
+						break;
+					case 39:
+						{texto += yytext();}
+					case -40:
+						break;
+					case 40:
+						{yybegin(YYINITIAL); return new Symbol(sym1.txtetiqueta,yyline,yychar,texto);}
+					case -41:
+						break;
+					case 41:
+						{yychar=1; yybegin(S3);}
+					case -42:
+						break;
+					case 42:
+						{yybegin(S3);}
+					case -43:
+						break;
+					case 43:
+						{yybegin(COMENTARIO_S2);}
+					case -44:
+						break;
+					case 44:
+						{texto += " "+yytext(); yybegin(S2); }
+					case -45:
+						break;
+					case 45:
+						{yybegin(YYINITIAL); return new Symbol(sym1.txtetiqueta,yyline,yychar,texto);}
+					case -46:
+						break;
 					case 46:
+						{yychar=1;}
+					case -47:
+						break;
+					case 47:
+						{}
+					case -48:
+						break;
+					case 48:
+						{yybegin(COMENTARIO_S3);}
+					case -49:
+						break;
+					case 50:
 						{
             Reporte.agregarReporte(new Reporte("Lexico", "[HTML] caracter malo: "+yytext().trim().toLowerCase(),yyline,yychar));
 }
-					case -39:
+					case -50:
+						break;
+					case 51:
+						{}
+					case -51:
+						break;
+					case 52:
+						{return new Symbol(sym1.cadena,yyline,yychar, yytext().trim());}
+					case -52:
+						break;
+					case 53:
+						{}
+					case -53:
+						break;
+					case 54:
+						{}
+					case -54:
+						break;
+					case 55:
+						{}
+					case -55:
+						break;
+					case 56:
+						{}
+					case -56:
+						break;
+					case 57:
+						{}
+					case -57:
+						break;
+					case 58:
+						{}
+					case -58:
+						break;
+					case 59:
+						{}
+					case -59:
+						break;
+					case 60:
+						{}
+					case -60:
 						break;
 					case 61:
 						{}
-					case -40:
+					case -61:
 						break;
-					case 64:
-						{
-            Reporte.agregarReporte(new Reporte("Lexico", "[HTML] caracter malo: "+yytext().trim().toLowerCase(),yyline,yychar));
-}
-					case -41:
+					case 62:
+						{yybegin(S3);}
+					case -62:
+						break;
+					case 63:
+						{}
+					case -63:
 						break;
 					case 65:
 						{
             Reporte.agregarReporte(new Reporte("Lexico", "[HTML] caracter malo: "+yytext().trim().toLowerCase(),yyline,yychar));
 }
-					case -42:
+					case -64:
+						break;
+					case 66:
+						{}
+					case -65:
+						break;
+					case 67:
+						{}
+					case -66:
+						break;
+					case 68:
+						{}
+					case -67:
+						break;
+					case 69:
+						{}
+					case -68:
+						break;
+					case 70:
+						{}
+					case -69:
+						break;
+					case 71:
+						{}
+					case -70:
+						break;
+					case 72:
+						{yybegin(S3);}
+					case -71:
+						break;
+					case 73:
+						{}
+					case -72:
+						break;
+					case 75:
+						{
+            Reporte.agregarReporte(new Reporte("Lexico", "[HTML] caracter malo: "+yytext().trim().toLowerCase(),yyline,yychar));
+}
+					case -73:
+						break;
+					case 77:
+						{
+            Reporte.agregarReporte(new Reporte("Lexico", "[HTML] caracter malo: "+yytext().trim().toLowerCase(),yyline,yychar));
+}
+					case -74:
+						break;
+					case 79:
+						{
+            Reporte.agregarReporte(new Reporte("Lexico", "[HTML] caracter malo: "+yytext().trim().toLowerCase(),yyline,yychar));
+}
+					case -75:
+						break;
+					case 81:
+						{
+            Reporte.agregarReporte(new Reporte("Lexico", "[HTML] caracter malo: "+yytext().trim().toLowerCase(),yyline,yychar));
+}
+					case -76:
+						break;
+					case 83:
+						{
+            Reporte.agregarReporte(new Reporte("Lexico", "[HTML] caracter malo: "+yytext().trim().toLowerCase(),yyline,yychar));
+}
+					case -77:
+						break;
+					case 112:
+						{}
+					case -78:
+						break;
+					case 113:
+						{}
+					case -79:
+						break;
+					case 114:
+						{}
+					case -80:
+						break;
+					case 115:
+						{}
+					case -81:
+						break;
+					case 116:
+						{}
+					case -82:
+						break;
+					case 117:
+						{}
+					case -83:
+						break;
+					case 118:
+						{yybegin(S3);}
+					case -84:
+						break;
+					case 119:
+						{}
+					case -85:
+						break;
+					case 122:
+						{
+            Reporte.agregarReporte(new Reporte("Lexico", "[HTML] caracter malo: "+yytext().trim().toLowerCase(),yyline,yychar));
+}
+					case -86:
 						break;
 					default:
 						yy_error(YY_E_INTERNAL,false);
