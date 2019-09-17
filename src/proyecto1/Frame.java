@@ -273,71 +273,6 @@ public class Frame extends javax.swing.JFrame {
     }//GEN-LAST:event_GuardarComoMouseClicked
 
     private void AnalizarMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_AnalizarMouseClicked
- /*   double resultado = 0;
-    double x = 0;
-    int numeroIteraciones=100;
-    int factorial = 1;        
-    int i=0,j = 0;          
-    int contador = 8;  
-    String  mensajes[]= new String[10];
-    mensajes[0]= "e^x(";
-    mensajes[1]= "ln(1+";
-    mensajes[2]= "ln(";
-    mensajes[3]= "sin(";
-    mensajes[4]= "cos(";
-    mensajes[5]= "arctan(";
-    mensajes[6]= "sinh(";
-    mensajes[7]= "cosh("; 
-    double  parametros[]= new double[10];
-    parametros[0] = 5;
-    parametros[1] = 0.5;
-    parametros[2] = 1.5;
-    parametros[3] = 2;
-    parametros[4] = 2;
-    parametros[5] = 0.2;
-    parametros[6] = 0.2;
-    parametros[7] = 0.2;
-    parametros[8] = 2;
-    parametros[9] = 3;
-
-    while(contador>0)
-    {
-        if(contador == 1)
-        {
-            System.out.println("CONTADOR = 1"); 
-            /*  Calculo de e^x 
-              Primero calculamos el factorial*/
-/*
-            resultado = 0;  
-            x = parametros[contador ];    
-           
-
-            i = 0; 
-            while(i < numeroIteraciones)
-            {    
-                factorial = 1;
-                j=0;
-                while(j < i)
-                {
-                    factorial = factorial * (j+1);
-                    j++;
-                }  
-	        System.out.println("-----Resultado "+ resultado);
-                System.out.println(i +"! = " + factorial);
-                resultado = resultado +  Math.pow(x, i) / factorial;  
-                        System.out.println("Resultado EXACTO:" + factorial(i));
-
-              i++;
-            }     
-            System.out.println(contador +"--" + mensajes[contador-1]+x+") = " + resultado); 
-        }
-
-        contador--;
-    }                                   
-
-        */
-
-        
         CSS.CSS.estilos.clear();
         HTML.HTML.listaId.clear();
         Componente.listaComponentes.clear();
@@ -379,14 +314,6 @@ public class Frame extends javax.swing.JFrame {
 
     }//GEN-LAST:event_AnalizarMouseClicked
 
-    
-        public  int factorial(int n) {
-        int resultado = 1;
-        for (int i = 1; i <= n; i++) {
-            resultado *= i;
-        }
-        return resultado;
-    }
     private void jButton1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jButton1MouseClicked
         nombre_proyecto = "UFEprojects\\" + txtname.getText();
         CrearCarpeta("UFEprojects");

@@ -19,8 +19,6 @@ public class SegundoRecorrido {
 
     public Entorno Ejecutar(Nodo raiz, Entorno global) {
         recorrer(raiz, global);
-        /*System.out.println("--------------------------------------------2)VARIABLES DECLARADAS-- segundo recorrido-------------------------------------------------------");
-        global.imprimir();*/
         return global;
     }
 

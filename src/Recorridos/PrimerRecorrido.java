@@ -10,7 +10,7 @@ import CSS.*;
 import analizadores.LexicoUFE;
 
 /**
- * En este recorrido se importaran los componentes necesarios y las variables
+ * En este recorrido se importan los componentes necesarios y las variables
  * globales de dichos archivos
  *
  * @author AlisonLeiva
@@ -77,7 +77,6 @@ public class PrimerRecorrido {
             PrimerRecorrido primer_rec = new PrimerRecorrido();
             SegundoRecorrido segundo_rec = new SegundoRecorrido();
 
-            // Entorno local = new Entorno(ent);
             ent = primer_rec.Ejecutar(raiz, ent);
             segundo_rec.Ejecutar(raiz, ent);
 
@@ -85,6 +84,7 @@ public class PrimerRecorrido {
             Reporte.agregarReporte(new Reporte("Semantico", "Error en compilar el archivo: " + Frame.nombre_proyecto, raiz.linea, raiz.columna));
 
         }
+        //Eliminacion de componentes repetidos 
         int size = Componente.listaComponentes.size();
         boolean importado = false;
         for (int i = 0; i < size; i++) {

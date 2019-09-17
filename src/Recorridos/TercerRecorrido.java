@@ -11,6 +11,7 @@ import UFE.*;
 import CSS.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.File;
 import javafx.scene.layout.Border;
 import javax.swing.border.BevelBorder;
 import javax.swing.border.EtchedBorder;
@@ -19,7 +20,7 @@ import proyecto1.Frame;
 
 /**
  *
- * En el tercer recorrido se ejecutaran los ciclos,instrucciones y demas...
+ * En el tercer recorrido se ejecutaran los ciclos,instrucciones, render
  *
  * @author AlisonLeiva
  */
@@ -126,6 +127,7 @@ public class TercerRecorrido {
         String idComponente = raiz.hijos.get(0).valor;
         for (int i = 0; i < Componente.listaComponentes.size(); i++) {
             if (Componente.listaComponentes.get(i).id.equals(idComponente.toLowerCase().trim())) {
+                //recorrer el subarbol del componente importado
                 recorrer(Componente.listaComponentes.get(i).listaInstrucciones, ent, componente);
             }
         }
@@ -136,7 +138,6 @@ public class TercerRecorrido {
             if (instruccion.estado.equals("RETURN")) {
                 for (Nodo c : instruccion.hijos.get(0).hijos) {
                     Component component = recorrer(c, ent, componente);
-                    System.out.println("COMPONENTES_ADD_FRAME " + instruccion.estado);
                     if (component != null) {
                         if (componente instanceof JFrame) {
                             frame.add(component);
@@ -175,7 +176,6 @@ public class TercerRecorrido {
         while (Boolean.valueOf(condicion.valor.toString())) {
             Entorno local = new Entorno(ent);
             recorrer(raiz.hijos.get(1), local, componente);
-          //  JOptionPane.showMessageDialog(null, "CICLO MIENTRAS ");
             condicion = EjecutarOperacion.resolverExpresion(raiz.hijos.get(0), local);
         }
     }
@@ -270,12 +270,10 @@ public class TercerRecorrido {
 
     }
 
-    public void Atributos(Nodo raiz, AtributoUFE a, Entorno ent) {
+    public void AplicarAtributosComponente(Nodo raiz, AtributoUFE a, Entorno ent) {
         for (int i = 0; i < raiz.hijos.size(); i++) {
-
             String estado = raiz.hijos.get(i).hijos.get(0).valor;            
             Expresion valor = EjecutarOperacion.resolverExpresion(raiz.hijos.get(i).hijos.get(1), ent);
-
             if (!valor.tipo.equals(Simbolo.EnumTipo.ERROR)) {
                 switch (estado) {
                     case "id": {
@@ -378,7 +376,7 @@ public class TercerRecorrido {
 
         AtributoUFE a = new AtributoUFE("&", 0, 0, 100, 100, "#FFFFFF", 0, "%", "%", -100, 100, "%");
         System.out.println("--------------------COMPONENTE-------------------- " + raiz.estado);
-        Atributos(raiz.hijos.get(0), a, ent);
+        AplicarAtributosComponente(raiz.hijos.get(0), a, ent);
         System.out.println("id: " + a.id + "\nx: " + a.x + "\ny: " + a.y + "\ncolor: " + a.color + "\nborder: " + a.border + " height: " + a.height + "\nwidth: " + a.width + "\nonclick: " + a.onclick + "\nsrc: " + a.src + "\nmax: " + a.max + "\nmin: " + a.min + "\nclassname: " + a.classname);
         switch (tipoComponente) {
             case "PANEL": {
@@ -393,7 +391,6 @@ public class TercerRecorrido {
                     return panel;
                 } else {
                     for (Nodo COMPONENTE : raiz.hijos.get(1).hijos) {
-                        System.out.println("ADD_PANEL " + COMPONENTE.estado);
                         Component componente = recorrer(COMPONENTE, ent, panel);
                         if (componente != null) {
                             panel.add(componente);
@@ -473,9 +470,8 @@ public class TercerRecorrido {
                 }
 
                 if (!a.src.equals("%")) {
-                    String ruta = Frame.nombre_proyecto + "\\src\\" + a.src;
-                    ImageIcon imagen = new ImageIcon(getClass().getResource(ruta));
-                    ImageIcon icono = new ImageIcon(imagen.getImage().getScaledInstance(img.getWidth(), img.getHeight(), Image.SCALE_DEFAULT));
+                    File ruta = new File(Frame.nombre_proyecto+"/src/"+a.src);
+                    ImageIcon icono = new ImageIcon( new ImageIcon(ruta.getPath()).getImage().getScaledInstance(img.getWidth(), img.getHeight(), Image.SCALE_DEFAULT));
                     img.setIcon(icono);
                 }
                 return img;
